@@ -1,0 +1,1 @@
+# Stockify-Inventory-Management-App
