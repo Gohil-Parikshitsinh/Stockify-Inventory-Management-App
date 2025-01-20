@@ -137,10 +137,6 @@ aside .logo{
     gap: 1rem;
 }
 
-aside .top div.close{
-    display: none;
-}
-
 /* Aside sidebar */
 aside .sidebar{
     background-color: var(--clr-white);
@@ -517,4 +513,121 @@ main .recent_order a{
     border: 2px dashed;
     color: var(--clr-dark-valorant);
     margin-bottom: 40px;
+}
+
+/* -------------------- Media Query -------------------- */
+/* for tablet */
+@media screen and (max-width:1200px) {
+    .container{
+        width: 94%;
+        grid-template-columns: 7rem auto 14rem;
+    }
+
+    aside .sidebar h3{
+        display: none;
+    }
+
+    aside .sidebar a:last-child{
+        position: relative;
+        margin-top: 1.8rem;
+    }
+
+    main .insights{
+        display: grid;
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+
+/* for mobile  */
+
+@media screen and (max-width:768px){
+    .container{
+        width: 100%;
+        grid-template-columns: repeat(1,1fr);
+    }
+
+    aside{
+        position: fixed;
+        width: 18rem;
+        z-index: 3;
+        background: var(--clr-white);
+        display: none;
+    }
+
+    aside .logo h2{
+        display: inline;
+    }
+
+    aside .sidebar h3{
+        display: inline;
+    }
+
+    aside .sidebar a{
+        width: 100%;
+        height: 3.4rem;
+    }
+
+    aside .top .close span{
+        display: inline;
+        position: relative;
+        right: 0;
+        margin-right: 30px;
+        font-size: 35px;
+    }
+
+    .right .top{
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--clr-white);
+        padding: 0 0.8rem;
+        width: 100%;
+        height: 4.6rem;
+        z-index: 2;
+        box-shadow: 0 1rem 1rem var(--box-shadow);
+        margin: 0;
+    }
+
+    main .insights{
+        display: grid;
+        grid-template-columns: repeat(1,1fr);
+        gap: 1.6rem;
+        padding: 40px;
+    }
+
+    main .recent_order{
+        padding: 30px;
+        margin: 0 auto;
+    }
+
+    .right .profile{
+        position: absolute;
+        left: 70%;
+    }
+
+    .right .recent-updates{
+        padding: 30px;
+    }
+
+    .right .sales-analytics{
+        padding: 30px;
+    }
+
+    .add-products{
+        padding: 30px;
+    }
+
+    .right .top button{
+        display: inline-block;
+        background: transparent;
+        cursor: pointer;
+        color: var(--clr-dark);
+        position: absolute;
+        left: 1rem;
+    }
+
+
 }
