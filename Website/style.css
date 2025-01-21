@@ -1,18 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=Share+Tech&display=swap');
-
-:root{
-    --clr-primary: #7380ec;
-    --clr-danger: #ff7782;
-    --clr-success: #41f1b6;
-    --clr-white: #fff;
-    --clr-info-dark: #7d8da1;
-    --clr-info-light: #dce1eb;
-    --clr-dark:  #363949;
-    --clr-warning: #ff4edc;
-    --clr-light: rgba(132,139,200,0.18);
-    --clr-primary-valorant: #111e88;
-    --clr-dark-valorant: #677483;
-    --clr-color-background: #f6f6f9;
+:root {
+    --clr-primary: #4caf50;
+    --clr-danger: #e91e63;
+    --clr-success: #2196f3;
+    --clr-white: #ffffff;
+    --clr-info-dark: #9e9e9e;
+    --clr-info-light: #e0e0e0;
+    --clr-dark: #424242;
+    --clr-warning: #ff9800;
+    --clr-light: rgba(76, 175, 80, 0.1);
+    --clr-color-background: #f5f5f5;
 
     --card-border-radius: 2rem;
     --border-radius-1: 0.4rem;
@@ -20,22 +17,19 @@
     --border-radius-3: 1.2rem;
 
     --card-padding: 1.8rem;
-    --padding-1:1.2rem;
+    --padding-1: 1.2rem;
     --box-shadow: 0 2rem 3rem var(--clr-light);
-
-
 }
 
-/* variable Classes */
-.dark-theme-variables{
-    --clr-color-background:#181a1e;
-    --clr-white:#202528;
-    --clr-light:rgba(0,0,0,0.4);
-    --clr-dark:#edeffd;
-    --clr-dark-valorant:#677483;
+.dark-theme-variables {
+    --clr-color-background: #121212;
+    --clr-white: #1e1e1e;
+    --clr-light: rgba(0, 0, 0, 0.4);
+    --clr-dark: #e0e0e0;
+    --clr-info-dark: #bdbdbd;
     --box-shadow: 0 2rem 3rem var(--clr-light);
-    
 }
+
 
 *{
     margin: 0;
@@ -146,6 +140,10 @@ aside .top{
 aside .logo{
     display: flex;
     gap: 1rem;
+}
+
+aside .logo h2{
+    color: var(--clr-dark);
 }
 
 /* Aside sidebar */
@@ -339,6 +337,11 @@ main .insights .progress .number{
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--clr-dark);
+}
+
+main .insights small{
+    color: var(--clr-info-dark);
 }
 
 main .recent_order{
@@ -373,6 +376,7 @@ main table tbody tr{
 main table tbody td{
     height: 3.8rem;
     border-bottom: 1px solid var(--clr-dark);
+    color: var(--clr-dark-valorant);
 }
 
 main table tbody tr:last-child td{
