@@ -41,36 +41,58 @@
     border: 0;
     list-style: none;
     appearance: none;
-    font-family: "Share Tech","Poppins", serif;
+    /* font-family: "Share Tech","Poppins", serif; */
+    font-family: "Poppins", serif;
     color: var(--clr-primary);
     background-color: var(--clr-bg);
 }
 
-/* navbas start */
-.navbar {
-  height: 3.5rem;
-  background-color: var(--clr-accent);
+/* NAV BAR SECTION */
+.navbar{
+    display: flex;
 }
 
-.list_links{
-    justify-content: center;
+.navbar .navbar-left{
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    height: 100px;
+    width: 10%;
+    align-content: center;
+    overflow: hidden;
+}
+
+.navbar .navbar-left a img{
+    object-fit: cover;
+}
+
+.navbar .navbar-center{
+    width: 70%;
+    align-content: center;
+}
+
+.navbar .navbar-center ul{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly;
+}
+
+.navbar .navbar-center ul li a{
+    padding: 1rem;
+    border-radius: 0.75rem;
+    color: var(--clr-primary);
+}
+
+.navbar .navbar-center ul li a:hover{
+    background-color: #2a9d8f;
+    border-radius: 0.75rem;
+    transition: background-color 0.4s ease;
+    color: var(--clr-bg);
+}
+
+.navbar .navbar-right{
+    width: 15%;
+    display: flex;
     align-items: center;
-}
-
-.search_bar{
     justify-content: center;
-    align-items: center;
-}
-
-.nav-link{
-  border-radius: 0.4rem;
-}
-
-.nav-link:hover{
-  background-color: var(--clr-success);
-  transition: 0.4s ease;
-}
-
-.sarchBtn{
-  
 }
