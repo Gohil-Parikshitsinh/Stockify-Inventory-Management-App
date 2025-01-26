@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.font import Font
+from tkinter import ttk, messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
@@ -21,6 +22,11 @@ def show_content(content, active_button=None):
     else:
         label = tk.Label(main_content, text=f"{content} Content", font=("Arial", 16), bg="white", fg="#333333")
         label.pack(pady=20)
+
+# Helper function to clear main content area
+def clear_main_content():
+    for widget in main_content.winfo_children():
+        widget.destroy()
 
 # Function to dynamically update card values
 def update_card_value(card_label, new_value):
@@ -137,6 +143,213 @@ def show_dashboard():
 
     # Add graphs below cards
     add_graphs(dashboard)
+
+
+def product_list():
+    clear_main_content()
+    label = tk.Label(main_content, text="Product List", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    # Table for products
+    columns = ("Product ID", "Product Name", "Category", "Price", "Stock")
+    tree = ttk.Treeview(main_content, columns=columns, show="headings", height=10)
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=120)
+    for pid, pdata in products.items():
+        tree.insert("", tk.END, values=(pid, pdata["name"], pdata["category"], pdata["price"], pdata["stock"]))
+    tree.pack(pady=10)
+
+def add_category():
+    clear_main_content()
+    tk.Label(main_content, text="Add Category", font=("Arial", 16), bg="white").pack(pady=10)
+    tk.Label(main_content, text="Category ID:", bg="white").pack()
+    id_entry = tk.Entry(main_content)
+    id_entry.pack()
+    tk.Label(main_content, text="Category Name:", bg="white").pack()
+    name_entry = tk.Entry(main_content)
+    name_entry.pack()
+
+    def submit():
+        cid = id_entry.get()
+        name = name_entry.get()
+        if not cid.isdigit() or not name:
+            messagebox.showerror("Error", "Invalid inputs")
+            return
+        categories[int(cid)] = name
+        messagebox.showinfo("Success", f"Added category '{name}'")
+    tk.Button(main_content, text="Submit", command=submit).pack(pady=10)
+
+def add_product():
+    clear_main_content()
+    tk.Label(main_content, text="Add Product", font=("Arial", 16), bg="white").pack(pady=10)
+    tk.Label(main_content, text="Product ID:", bg="white").pack()
+    id_entry = tk.Entry(main_content)
+    id_entry.pack()
+    tk.Label(main_content, text="Product Name:", bg="white").pack()
+    name_entry = tk.Entry(main_content)
+    name_entry.pack()
+    tk.Label(main_content, text="Category (Dropdown):", bg="white").pack()
+    category_var = tk.StringVar()
+    category_dropdown = ttk.Combobox(main_content, textvariable=category_var, state="readonly")
+    category_dropdown["values"] = list(categories.values())
+    category_dropdown.pack()
+    tk.Label(main_content, text="Price:", bg="white").pack()
+    price_entry = tk.Entry(main_content)
+    price_entry.pack()
+    tk.Label(main_content, text="Stock:", bg="white").pack()
+    stock_entry = tk.Entry(main_content)
+    stock_entry.pack()
+
+    def submit():
+        pid = id_entry.get()
+        name = name_entry.get()
+        category = category_var.get()
+        price = price_entry.get()
+        stock = stock_entry.get()
+        if not pid.isdigit() or not name or not category or not price or not stock:
+            messagebox.showerror("Error", "All fields are required")
+            return
+        products[int(pid)] = {"name": name, "category": category, "price": price, "stock": stock}
+        messagebox.showinfo("Success", f"Added product '{name}'")
+    tk.Button(main_content, text="Submit", command=submit).pack(pady=10)
+
+def remove_category():
+    clear_main_content()
+    label = tk.Label(main_content, text="Remove Category", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+    tk.Label(main_content, text="Category ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content, width=30)
+    id_entry.pack(pady=5)
+
+    def submit_remove():
+        cid = id_entry.get()
+        if not cid.isdigit():
+            messagebox.showerror("Error", "Category ID must be a number.")
+            return
+        cid = int(cid)
+        if cid not in categories:
+            messagebox.showerror("Error", f"Category ID {cid} does not exist.")
+            return
+        del categories[cid]
+        messagebox.showinfo("Success", f"Category ID {cid} removed successfully.")
+
+    tk.Button(main_content, text="Submit", command=submit_remove).pack(pady=10)
+
+# Function to handle Update Category
+def update_category():
+    clear_main_content()
+    label = tk.Label(main_content, text="Update Category", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+    tk.Label(main_content, text="Category ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content, width=30)
+    id_entry.pack(pady=5)
+    tk.Label(main_content, text="New Category Name (leave blank to skip):", bg="white").pack(pady=5)
+    name_entry = tk.Entry(main_content, width=30)
+    name_entry.pack(pady=5)
+
+    def submit_update():
+        cid = id_entry.get()
+        if not cid.isdigit():
+            messagebox.showerror("Error", "Category ID must be a number.")
+            return
+        cid = int(cid)
+        if cid not in categories:
+            messagebox.showerror("Error", f"Category ID {cid} does not exist.")
+            return
+        name = name_entry.get()
+        if name:
+            categories[cid] = name
+            messagebox.showinfo("Success", f"Category ID {cid} updated successfully.")
+        else:
+            messagebox.showinfo("Info", "No changes made.")
+
+    tk.Button(main_content, text="Submit", command=submit_update).pack(pady=10)
+
+# Function to handle Remove Product
+def remove_product():
+    clear_main_content()
+    label = tk.Label(main_content, text="Remove Product", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+    tk.Label(main_content, text="Product ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content, width=30)
+    id_entry.pack(pady=5)
+
+    def submit_remove():
+        pid = id_entry.get()
+        if not pid.isdigit():
+            messagebox.showerror("Error", "Product ID must be a number.")
+            return
+        pid = int(pid)
+        if pid not in products:
+            messagebox.showerror("Error", f"Product ID {pid} does not exist.")
+            return
+        del products[pid]
+        messagebox.showinfo("Success", f"Product ID {pid} removed successfully.")
+
+    tk.Button(main_content, text="Submit", command=submit_remove).pack(pady=10)
+
+# Function to handle Update Product
+def update_product():
+    clear_main_content()
+    tk.Label(main_content, text="Update Product", font=("Arial", 16), bg="white").pack(pady=10)
+
+    tk.Label(main_content, text="Product ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content)
+    id_entry.pack(pady=5)
+
+    tk.Label(main_content, text="New Product Name (leave blank to skip):", bg="white").pack(pady=5)
+    name_entry = tk.Entry(main_content)
+    name_entry.pack(pady=5)
+
+    tk.Label(main_content, text="New Category (leave blank to skip):", bg="white").pack(pady=5)
+    category_var = tk.StringVar()
+    category_dropdown = ttk.Combobox(main_content, textvariable=category_var, state="readonly", width=27)
+    category_dropdown['values'] = list(categories.values())  # Populate with available categories
+    category_dropdown.pack(pady=5)
+
+    tk.Label(main_content, text="New Price (leave blank to skip):", bg="white").pack(pady=5)
+    price_entry = tk.Entry(main_content)
+    price_entry.pack(pady=5)
+
+    tk.Label(main_content, text="New Stock (leave blank to skip):", bg="white").pack(pady=5)
+    stock_entry = tk.Entry(main_content)
+    stock_entry.pack(pady=5)
+
+    def submit_update():
+        pid = id_entry.get()
+
+        # Validation: Check if ID is entered
+        if not pid.isdigit():
+            messagebox.showerror("Error", "Product ID must be a number.")
+            return
+
+        pid = int(pid)
+
+        # Check if the product exists
+        if pid not in products:
+            messagebox.showerror("Error", f"Product ID {pid} does not exist.")
+            return
+
+        # Update fields if not empty
+        name = name_entry.get()
+        category = category_var.get()
+        price = price_entry.get()
+        stock = stock_entry.get()
+
+        if name:
+            products[pid]["name"] = name
+        if category:
+            products[pid]["category"] = category
+        if price:
+            products[pid]["price"] = price
+        if stock:
+            products[pid]["stock"] = stock
+
+        messagebox.showinfo("Success", f"Product ID {pid} updated successfully.")
+
+    tk.Button(main_content, text="Submit", command=submit_update).pack(pady=10)
+
 # Main application window
 root = tk.Tk()
 root.title("Inventory Management Software")
@@ -147,6 +360,7 @@ root.resizable(False, False)  # Disable resizing
 # Create custom fonts
 value_font = Font(family="Arial", size=16, weight="bold")
 title_font = Font(family="Arial", size=12)
+
 
 # Sidebar frame
 sidebar = tk.Frame(root, bg="#f5f5f5", width=200)
@@ -164,6 +378,50 @@ buttons = [
     ("Purchase", "Purchase Content"),
     ("Settings", "Settings Content"),
 ]
+# Sidebar dropdown for Product
+product_frame = tk.Frame(sidebar, bg="#f5f5f5")  # Create a frame for the Product dropdown
+product_label = tk.Label(
+    product_frame, text="Product", font=("Arial", 14, "bold"), bg="#f5f5f5", fg="#333333"
+)
+product_label.pack(pady=(10, 0))
+
+
+# Data storage for products and categories
+products = {
+    1: {"name": "Product A", "category": "Category 1", "price": "$10", "stock": "100"},
+    2: {"name": "Product B", "category": "Category 2", "price": "$15", "stock": "200"},
+}
+categories = {
+    1: "Category 1",
+    2: "Category 2",
+}
+
+# Dropdown buttons for product menu
+product_buttons = [
+    ("Product List", product_list),
+    ("Add Category", add_category),
+    ("Remove Category", remove_category),
+    ("Update Category", update_category),
+    ("Add Product", add_product),
+    ("Remove Product", remove_product),
+    ("Update Product", update_product),
+]
+
+# Create individual buttons for each product-related action
+for text, command in product_buttons:
+    tk.Button(
+        product_frame,
+        text=f"  {text}",  # Add padding for a dropdown effect
+        font=("Arial", 12),
+        bg="#ffffff",
+        fg="#333333",
+        activebackground="#e0f7fa",
+        activeforeground="#00796b",
+        relief="flat",
+        command=command,  # Assign the corresponding function
+    ).pack(fill="x", padx=20, pady=2)
+
+product_frame.pack(fill="x", pady=5)  # Add the product dropdown to the sidebar
 
 sidebar_buttons = []
 for text, content in buttons:
@@ -180,6 +438,174 @@ for text, content in buttons:
     )
     btn.pack(fill="x", pady=5, padx=10)
     sidebar_buttons.append(btn)
+
+
+def sales_list():
+    clear_main_content()
+    label = tk.Label(main_content, text="Sales List", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    # Table for sales list
+    columns = ("Sale ID", "Product", "Quantity", "Price", "Total")
+    tree = ttk.Treeview(main_content, columns=columns, show="headings", height=10)
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=120)
+    for sale_id, sale_data in sales.items():
+        tree.insert("", tk.END, values=(sale_id, sale_data["product"], sale_data["quantity"], sale_data["price"], sale_data["total"]))
+    tree.pack(pady=10)
+
+def add_sale():
+    clear_main_content()
+    label = tk.Label(main_content, text="Add Sale", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    tk.Label(main_content, text="Sale ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content)
+    id_entry.pack(pady=5)
+
+    tk.Label(main_content, text="Product:", bg="white").pack(pady=5)
+    product_entry = tk.Entry(main_content)
+    product_entry.pack(pady=5)
+
+    tk.Label(main_content, text="Quantity:", bg="white").pack(pady=5)
+    quantity_entry = tk.Entry(main_content)
+    quantity_entry.pack(pady=5)
+
+    tk.Label(main_content, text="Price:", bg="white").pack(pady=5)
+    price_entry = tk.Entry(main_content)
+    price_entry.pack(pady=5)
+
+    def submit_sale():
+        sale_id = id_entry.get()
+        product = product_entry.get()
+        quantity = quantity_entry.get()
+        price = price_entry.get()
+
+        if not sale_id.isdigit() or not quantity.isdigit() or not product or not price:
+            messagebox.showerror("Error", "All fields must be filled correctly.")
+            return
+
+        sale_id = int(sale_id)
+        quantity = int(quantity)
+        total = quantity * float(price[1:])  # Remove '$' and calculate total
+
+        sales[sale_id] = {
+            "product": product,
+            "quantity": quantity,
+            "price": price,
+            "total": total
+        }
+
+        messagebox.showinfo("Success", f"Sale added for {product}. Total: ${total:.2f}")
+
+    tk.Button(main_content, text="Submit", command=submit_sale).pack(pady=10)
+
+def update_sale():
+    clear_main_content()
+    label = tk.Label(main_content, text="Update Sale", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    tk.Label(main_content, text="Sale ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content)
+    id_entry.pack(pady=5)
+
+    tk.Label(main_content, text="New Product (leave blank to skip):", bg="white").pack(pady=5)
+    product_entry = tk.Entry(main_content)
+    product_entry.pack(pady=5)
+
+    tk.Label(main_content, text="New Quantity (leave blank to skip):", bg="white").pack(pady=5)
+    quantity_entry = tk.Entry(main_content)
+    quantity_entry.pack(pady=5)
+
+    tk.Label(main_content, text="New Price (leave blank to skip):", bg="white").pack(pady=5)
+    price_entry = tk.Entry(main_content)
+    price_entry.pack(pady=5)
+
+    def submit_update():
+        sale_id = id_entry.get()
+
+        if not sale_id.isdigit():
+            messagebox.showerror("Error", "Sale ID must be a number.")
+            return
+
+        sale_id = int(sale_id)
+
+        if sale_id not in sales:
+            messagebox.showerror("Error", f"Sale ID {sale_id} does not exist.")
+            return
+
+        product = product_entry.get()
+        quantity = quantity_entry.get()
+        price = price_entry.get()
+
+        # Update only fields that are provided
+        if product:
+            sales[sale_id]["product"] = product
+        if quantity:
+            sales[sale_id]["quantity"] = int(quantity)
+        if price:
+            sales[sale_id]["price"] = price
+            sales[sale_id]["total"] = int(quantity) * float(price[1:])  # Recalculate total price
+
+        messagebox.showinfo("Success", f"Sale ID {sale_id} updated successfully.")
+
+    tk.Button(main_content, text="Submit", command=submit_update).pack(pady=10)
+def remove_sale():
+    clear_main_content()
+    label = tk.Label(main_content, text="Remove Sale", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    tk.Label(main_content, text="Sale ID:", bg="white").pack(pady=5)
+    id_entry = tk.Entry(main_content)
+    id_entry.pack(pady=5)
+
+    def submit_remove():
+        sale_id = id_entry.get()
+
+        if not sale_id.isdigit():
+            messagebox.showerror("Error", "Sale ID must be a number.")
+            return
+
+        sale_id = int(sale_id)
+
+        if sale_id not in sales:
+            messagebox.showerror("Error", f"Sale ID {sale_id} does not exist.")
+            return
+
+        del sales[sale_id]
+        messagebox.showinfo("Success", f"Sale ID {sale_id} removed successfully.")
+
+    tk.Button(main_content, text="Submit", command=submit_remove).pack(pady=10)
+
+# Sidebar dropdown for Sales
+sales_frame = tk.Frame(sidebar, bg="#f5f5f5")
+sales_label = tk.Label(sales_frame, text="Sales", font=("Arial", 14, "bold"), bg="#f5f5f5", fg="#333333")
+sales_label.pack(pady=(10, 0))
+
+# Sales-related buttons
+sales_buttons = [
+    ("Sales List", sales_list),
+    ("Add Sale", add_sale),
+    ("Update Sale", update_sale),
+    ("Remove Sale", remove_sale),
+]
+
+for text, command in sales_buttons:
+    tk.Button(
+        sales_frame,
+        text=f"  {text}",
+        font=("Arial", 12),
+        bg="#ffffff",
+        fg="#333333",
+        activebackground="#e0f7fa",
+        activeforeground="#00796b",
+        relief="flat",
+        command=command,
+    ).pack(fill="x", padx=20, pady=2)
+
+sales_frame.pack(fill="x", pady=5)
+
 
 # Set command with a reference to the button itself
 for i, (text, content) in enumerate(buttons):
