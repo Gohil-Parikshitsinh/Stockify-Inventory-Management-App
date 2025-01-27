@@ -1,8 +1,7 @@
 from tkinter import *
 from tkinter import ttk
-
 from tkinter.font import Font
-from tkinter import ttk, messagebox, Menubutton
+from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
@@ -21,7 +20,6 @@ def copy():
 def paste():
     print("You paste some text")
 
-
 # -----------------------------------------------MENUBAR ---------------------------------------------------------
 menubar =  Menu(window)
 window.config(menu=menubar)
@@ -37,7 +35,6 @@ menubar.add_cascade(label="Edit",menu=editMenu)
 editMenu.add_command(label="Cut",command=cut)
 editMenu.add_command(label="Copy",command=copy)
 editMenu.add_command(label="Paste",command=paste)
-
 
 # ----------------------------------------------- TABS ---------------------------------------------------------
 notebook = ttk.Notebook(window)
@@ -105,8 +102,10 @@ Label(productTab,text="Hello this is product tab", width=50, height=25).pack()
 Label(supplierTab,text="Hello this is supplier tab", width=50, height=25).pack()
 Label(reportTab,text="Hello this is report tab", width=50, height=25).pack()
 
-# Set window to full screen mode
-window.attributes("-fullscreen", True)
+# Set the window size to the screen size
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+window.geometry(f"{screen_width}x{screen_height}")  # Set the window size to the screen's width and height
 
 # Make the notebook container fill the screen as well
 notebook.pack(expand=True, fill="both")
