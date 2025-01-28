@@ -373,11 +373,26 @@ title_label.pack(pady=10)
 # Sidebar buttons
 buttons = [
     ("Dashboard", "Dashboard"),
-    ("Product", "Product Content"),
-    ("Sales", "Sales Content"),
-    ("Purchase", "Purchase Content"),
-    ("Settings", "Settings Content"),
 ]
+
+
+sidebar_buttons = []
+for text, content in buttons:
+    btn = tk.Button(
+        sidebar,
+        text=text,
+        font=("Arial", 14),
+        bg="#ffffff",
+        fg="#333333",
+        activebackground="#e0f7fa",
+        activeforeground="#00796b",
+        relief="flat",
+        command=lambda c=content, b=None: show_content(c, b),
+    )
+    btn.pack(fill="x", pady=5, padx=10)
+    sidebar_buttons.append(btn)
+
+
 # Sidebar dropdown for Product
 product_frame = tk.Frame(sidebar, bg="#f5f5f5")  # Create a frame for the Product dropdown
 product_label = tk.Label(
@@ -422,22 +437,6 @@ for text, command in product_buttons:
     ).pack(fill="x", padx=20, pady=2)
 
 product_frame.pack(fill="x", pady=5)  # Add the product dropdown to the sidebar
-
-sidebar_buttons = []
-for text, content in buttons:
-    btn = tk.Button(
-        sidebar,
-        text=text,
-        font=("Arial", 14),
-        bg="#ffffff",
-        fg="#333333",
-        activebackground="#e0f7fa",
-        activeforeground="#00796b",
-        relief="flat",
-        command=lambda c=content, b=None: show_content(c, b),
-    )
-    btn.pack(fill="x", pady=5, padx=10)
-    sidebar_buttons.append(btn)
 
 
 def sales_list():
