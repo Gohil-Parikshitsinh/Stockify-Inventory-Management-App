@@ -6,6 +6,110 @@
   <title>Add Product</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
+  <style>
+/* Add Product Form Section */
+.add-product-form {
+  background-color: var(--base-clr);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.add-product-form h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--text-clr);
+  margin-bottom: 20px;
+}
+
+.add-product-form label {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--text-clr);
+}
+
+.add-product-form input,
+.add-product-form select,
+.add-product-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line-clr);
+  border-radius: 5px;
+  font-size: 1rem;
+  color: var(--text-clr);
+  margin-bottom: 15px;
+  background-color: #fff;
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.add-product-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Styling for the Add Product Button */
+.add-product-form input[type="submit"] {
+  background-color: var(--accent-clr);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  width: auto;
+  margin-top: 20px;
+  display: block; /* Makes button display as block for centering */
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.3s ease;
+}
+
+.add-product-form input[type="submit"]:hover {
+  background-color: var(--hover-clr); /* Hover effect */
+}
+
+/* Input Focus Effect */
+.add-product-form input:focus,
+.add-product-form select:focus,
+.add-product-form textarea:focus {
+  border-color: var(--accent-clr);
+  outline: none;
+  box-shadow: 0 0 5px rgba(200, 173, 127, 0.5); /* Accent color glow effect */
+}
+
+/* Form Button Wrapper */
+.form-button-wrapper {
+  text-align: center;
+}
+
+/* Responsive Design for smaller screens */
+@media screen and (max-width: 768px) {
+  .add-product-form {
+    padding: 20px;
+  }
+
+  .add-product-form h2 {
+    font-size: 1.6rem;
+  }
+
+  .add-product-form input,
+  .add-product-form select,
+  .add-product-form textarea {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .add-product-form input[type="submit"] {
+    font-size: 1.1rem;
+    padding: 10px 18px;
+  }
+}
+
+
+  </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -74,11 +178,65 @@
       </li>
     </ul>
   </nav>
-  <main>
+  <!-- <main>
     <div class="container">
       <h2>Add Products</h2>
       <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
     </div>
+  </main> -->
+
+  <main>
+    <section class="dashboard-header">
+      <h2>Add Product</h2>
+      <p>Use this form to add a new product to the inventory.</p>
+    </section>
+
+    <!-- Add Product Form -->
+    <section class="add-product-form">
+      <form id="add-product-form">
+        <label for="product-name">Product Name</label>
+        <input type="text" id="product-name" required>
+
+        <label for="category">Category</label>
+        <input type="text" id="category" required>
+
+        <label for="price">Price</label>
+        <input type="text" id="price" required>
+
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" required>
+
+        <button type="submit">Add Product</button>
+      </form>
+    </section>
   </main>
+
+  <script>
+    // Handle form submission and add product to the array
+    const form = document.getElementById('add-product-form');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const productName = document.getElementById('product-name').value;
+      const category = document.getElementById('category').value;
+      const price = document.getElementById('price').value;
+      const quantity = document.getElementById('quantity').value;
+
+      // Create a new product object
+      const newProduct = {
+        name: productName,
+        category: category,
+        price: price,
+        quantity: parseInt(quantity)
+      };
+
+      // Pass the new product to the parent window (view_products.html)
+      window.opener.addProduct(newProduct); 
+
+      // Close the Add Product page after submission
+      window.close();
+    });
+  </script>
 </body>
 </html>
