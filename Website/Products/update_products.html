@@ -6,6 +6,58 @@
   <title>Update Product</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
+  <style>
+    .update-product-form {
+      background-color: var(--base-clr);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    .update-product-form h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--text-clr);
+      margin-bottom: 20px;
+    }
+    .update-product-form label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text-clr);
+    }
+    .update-product-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line-clr);
+      border-radius: 5px;
+      font-size: 1rem;
+      color: var(--text-clr);
+      margin-bottom: 15px;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+    .update-product-form input[readonly] {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
+    }
+    .update-product-form button {
+      background-color: var(--accent-clr);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+    .update-product-form button:hover {
+      background-color: var(--hover-clr);
+    }
+  </style>
+  </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -74,11 +126,94 @@
       </li>
     </ul>
   </nav>
-  <main>
+  <!-- <main>
     <div class="container">
       <h2>Update Products</h2>
       <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
     </div>
+  </main> -->
+
+  <main>
+    <section class="dashboard-header">
+      <h2>Update Product</h2>
+      <p>Modify the product details as needed. The Product ID cannot be changed.</p>
+    </section>
+
+    <!-- Update Product Form -->
+    <section class="update-product-form">
+      <form id="update-product-form">
+        <label for="product-id">Product ID</label>
+        <input type="text" id="product-id" readonly>
+
+        <label for="product-name">Product Name</label>
+        <input type="text" id="product-name">
+
+        <label for="category">Category</label>
+        <input type="text" id="category">
+
+        <label for="price">Price</label>
+        <input type="text" id="price">
+
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity">
+
+        <button type="submit">Update Product</button>
+      </form>
+    </section>
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("update-product-form");
+
+      // Retrieve the product ID from URL params
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get("id");
+
+      if (!productId) {
+        alert("No product selected for update.");
+        window.location.href = "/Website/Products/view_products.html"; // Redirect if no ID
+        return;
+      }
+
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      let product = products.find(p => p.id === productId);
+
+      if (!product) {
+        alert("Product not found.");
+        window.location.href = "/Website/Products/view_products.html";
+        return;
+      }
+
+      // Fill the form with existing product data
+      document.getElementById("product-id").value = product.id;
+      document.getElementById("product-name").value = product.name;
+      document.getElementById("category").value = product.category;
+      document.getElementById("price").value = product.price;
+      document.getElementById("quantity").value = product.quantity;
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Get updated values
+        const updatedName = document.getElementById("product-name").value || product.name;
+        const updatedCategory = document.getElementById("category").value || product.category;
+        const updatedPrice = document.getElementById("price").value || product.price;
+        const updatedQuantity = document.getElementById("quantity").value || product.quantity;
+
+        // Update product details
+        product.name = updatedName;
+        product.category = updatedCategory;
+        product.price = updatedPrice;
+        product.quantity = updatedQuantity;
+
+        // Save changes to localStorage
+        localStorage.setItem("products", JSON.stringify(products));
+
+        alert("Product updated successfully!");
+        window.location.href = "/Website/Products/view_products.html";
+      });
+    });
+  </script>
 </body>
 </html>

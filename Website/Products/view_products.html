@@ -292,62 +292,73 @@ th, td {
         </thead>
         <tbody id="product-table-body"></tbody>
       </table>
-      
     </section>
-
-    
-
-
   </main>
 
+
+
+  <script>
+    function loadPresetProducts() {
+      let products = JSON.parse(localStorage.getItem("products"));
   
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-  initializeProducts();
-  displayProducts();
-});
-
-// Function to initialize default products if no products exist
-function initializeProducts() {
-  if (!localStorage.getItem("products")) {
-    const defaultProducts = [
-      { id: "PRD12345", name: "Laptop", category: "Electronics", price: "55000", quantity: 10 },
-      { id: "PRD67890", name: "Wireless Mouse", category: "Accessories", price: "1200", quantity: 25 },
-      { id: "PRD24680", name: "Keyboard", category: "Accessories", price: "1800", quantity: 15 },
-      { id: "PRD13579", name: "Smartphone", category: "Electronics", price: "40000", quantity: 8 },
-      { id: "PRD86420", name: "Headphones", category: "Accessories", price: "3500", quantity: 20 }
-    ];
-    localStorage.setItem("products", JSON.stringify(defaultProducts));
-  }
-}
-
-// Function to display products in the table
-function displayProducts() {
-  const products = JSON.parse(localStorage.getItem("products")) || [];
-  const tableBody = document.getElementById("product-table-body");
-  tableBody.innerHTML = "";
-
-  products.forEach((product, index) => {
-    let row = tableBody.insertRow();
-    row.innerHTML = `
-      <td>${product.id}</td>
-      <td>${product.name}</td>
-      <td>${product.category}</td>
-      <td>₹${product.price}</td>
-      <td>${product.quantity}</td>
-      <td><button onclick="deleteProduct(${index})">Delete</button></td>
-    `;
-  });
-}
-
-// Function to delete a product
-function deleteProduct(index) {
-  let products = JSON.parse(localStorage.getItem("products"));
-  products.splice(index, 1);
-  localStorage.setItem("products", JSON.stringify(products));
-  displayProducts();
-}
-</script>
-
+      // ✅ Only add preset data if products do not exist in localStorage OR are empty
+      if (!products || products.length === 0) {
+        products = [
+          { id: "P001A3", name: "Laptop", category: "Electronics", price: "₹75,000", quantity: 10 },
+          { id: "B74D20", name: "Office Chair", category: "Furniture", price: "₹4,500", quantity: 25 },
+          { id: "G92K41", name: "Gaming Mouse", category: "Accessories", price: "₹1,200", quantity: 50 },
+          { id: "X29Y57", name: "Monitor 24-inch", category: "Electronics", price: "₹12,500", quantity: 15 },
+          { id: "M40N81", name: "Wireless Keyboard", category: "Accessories", price: "₹1,800", quantity: 40 }
+        ];
+        localStorage.setItem("products", JSON.stringify(products)); // ✅ Set only once
+      }
+    }
+  
+    function displayProducts() {
+      // ✅ Call `loadPresetProducts()` only once during page load
+      if (!localStorage.getItem("products")) {
+        loadPresetProducts();
+      }
+  
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      
+      const tableBody = document.getElementById("product-table-body");
+      tableBody.innerHTML = ""; // ✅ Clear table before re-rendering to prevent duplicates
+  
+      products.forEach((product, index) => {
+        let row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${product.id}</td>
+          <td>${product.name}</td>
+          <td>${product.category}</td>
+          <td>${product.price}</td>
+          <td>${product.quantity}</td>
+          <td>
+            <button onclick="updateProduct('${product.id}')">Update</button>
+            <button onclick="deleteProduct(${index})">Delete</button>
+          </td>
+        `;
+      });
+    }
+  
+    function deleteProduct(index) {
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+  
+      displayProducts(); // Refresh table
+    }
+  
+    function updateProduct(productId) {
+      window.location.href = `/Website/Products/update_products.html?id=${productId}`;
+    }
+  
+    // ✅ Ensure preset products load only **once** during page load
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPresetProducts(); // Load only if missing
+      displayProducts();
+    });
+  </script>
+  
 </body>
 </html>
