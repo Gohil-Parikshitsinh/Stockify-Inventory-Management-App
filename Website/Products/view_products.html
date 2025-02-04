@@ -58,6 +58,10 @@ th, td {
         background-color: var(--line-clr);
       }
 
+      .add_product{
+        margin: 5px 0 10px 0;
+      }
+
       /* Responsiveness */
       @media screen and (max-width: 768px) {
         table th,
@@ -274,74 +278,75 @@ th, td {
 
     <!-- Products Table -->
     <section class="view-products-table">
-      <table id="products-table">
+      <button onclick="window.location.href='/Website/Products/add_products.html'" class="add_product">Add Product</button>
+      <table>
         <thead>
           <tr>
+            <th>Product ID</th>
             <th>Product Name</th>
             <th>Category</th>
             <th>Price</th>
             <th>Quantity</th>
-            <th>Action</th> <!-- Add Action column for Delete -->
+            <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="products-body">
-          <!-- Products will be dynamically inserted here -->
-        </tbody>
+        <tbody id="product-table-body"></tbody>
       </table>
+      
     </section>
 
-    <button id="add-product-btn">Add Product</button>
+    
+
 
   </main>
 
   
 <script>
-  let products = [
-    { name: "Product A", category: "Category 1", price: "₹100", quantity: 10 },
-    { name: "Product B", category: "Category 2", price: "₹150", quantity: 5 },
-    { name: "Product C", category: "Category 1", price: "₹200", quantity: 20 }
-  ];
+  document.addEventListener("DOMContentLoaded", function () {
+  initializeProducts();
+  displayProducts();
+});
 
-  // Function to add a product to the array and update the table
-  function addProduct(product) {
-    products.push(product); // Add the new product to the array
-    renderProducts(); // Update the table
+// Function to initialize default products if no products exist
+function initializeProducts() {
+  if (!localStorage.getItem("products")) {
+    const defaultProducts = [
+      { id: "PRD12345", name: "Laptop", category: "Electronics", price: "55000", quantity: 10 },
+      { id: "PRD67890", name: "Wireless Mouse", category: "Accessories", price: "1200", quantity: 25 },
+      { id: "PRD24680", name: "Keyboard", category: "Accessories", price: "1800", quantity: 15 },
+      { id: "PRD13579", name: "Smartphone", category: "Electronics", price: "40000", quantity: 8 },
+      { id: "PRD86420", name: "Headphones", category: "Accessories", price: "3500", quantity: 20 }
+    ];
+    localStorage.setItem("products", JSON.stringify(defaultProducts));
   }
+}
 
-  // Function to delete a product from the array
-  function deleteProduct(index) {
-    products.splice(index, 1); // Remove the product from the array
-    renderProducts(); // Update the table after deletion
-  }
+// Function to display products in the table
+function displayProducts() {
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+  const tableBody = document.getElementById("product-table-body");
+  tableBody.innerHTML = "";
 
-  // Function to render the products in the table
-  function renderProducts() {
-    const productsBody = document.getElementById('products-body');
-    productsBody.innerHTML = ''; // Clear the table before rendering
-
-    products.forEach((product, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${product.name}</td>
-        <td>${product.category}</td>
-        <td>${product.price}</td>
-        <td>${product.quantity}</td>
-        <td><button onclick="deleteProduct(${index})">Delete</button></td> <!-- Add Delete Button -->
-      `;
-      productsBody.appendChild(row);
-    });
-  }
-
-  // Call renderProducts on page load to display the initial products
-  window.onload = renderProducts;
-</script>
-
-
-<script>
-  // Open the Add Product Page when the Add Product button is clicked
-  document.getElementById('add-product-btn').addEventListener('click', function() {
-    window.open('/Website/Products/add_products.html', '_blank', 'width=600,height=400');
+  products.forEach((product, index) => {
+    let row = tableBody.insertRow();
+    row.innerHTML = `
+      <td>${product.id}</td>
+      <td>${product.name}</td>
+      <td>${product.category}</td>
+      <td>₹${product.price}</td>
+      <td>${product.quantity}</td>
+      <td><button onclick="deleteProduct(${index})">Delete</button></td>
+    `;
   });
+}
+
+// Function to delete a product
+function deleteProduct(index) {
+  let products = JSON.parse(localStorage.getItem("products"));
+  products.splice(index, 1);
+  localStorage.setItem("products", JSON.stringify(products));
+  displayProducts();
+}
 </script>
 
 </body>
