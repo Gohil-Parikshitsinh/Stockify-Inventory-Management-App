@@ -50,6 +50,11 @@
         min-height: 100px;
       }
 
+      #product-id {
+      background-color: var(--hover-clr);
+      cursor: not-allowed;
+    }
+
       /* Styling for the Add Product Button */
       .add-product-form input[type="submit"] {
         background-color: var(--accent-clr);
@@ -84,6 +89,22 @@
       .form-button-wrapper {
         text-align: center;
       }
+
+      .add-product-form button {
+      background-color: var(--accent-clr);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-product-form button:hover {
+      background-color: var(--line-clr);
+    }
 
       /* Responsive Design for smaller screens */
       @media screen and (max-width: 768px) {
@@ -298,13 +319,6 @@
         </li>
       </ul>
     </nav>
-    <!-- <main>
-    <div class="container">
-      <h2>Add Products</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
-    </div>
-  </main> -->
-
     <main>
       <section class="dashboard-header">
         <h2>Add Product</h2>

@@ -6,6 +6,87 @@
   <title>Add Supplier</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
+  <style>
+    /* Add Supplier Form Section */
+    .add-supplier-form {
+      background-color: var(--base-clr);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    .add-supplier-form h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--text-clr);
+      margin-bottom: 20px;
+    }
+
+    .add-supplier-form label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text-clr);
+    }
+
+    .add-supplier-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line-clr);
+      border-radius: 5px;
+      font-size: 1rem;
+      color: var(--text-clr);
+      margin-bottom: 15px;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Disable editing on Supplier ID */
+    #supplier-id {
+      background-color: var(--hover-clr);
+      cursor: not-allowed;
+    }
+
+    /* Button Styling */
+    .add-supplier-form button {
+      background-color: var(--accent-clr);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-supplier-form button:hover {
+      background-color: var(--line-clr);
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .add-supplier-form {
+        padding: 20px;
+      }
+
+      .add-supplier-form h2 {
+        font-size: 1.6rem;
+      }
+
+      .add-supplier-form input {
+        padding: 10px;
+        font-size: 0.95rem;
+      }
+
+      .add-supplier-form button {
+        font-size: 1.1rem;
+        padding: 10px 18px;
+      }
+    }
+  </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -75,10 +156,73 @@
     </ul>
   </nav>
   <main>
-    <div class="container">
+    <section class="dashboard-header">
       <h2>Add Supplier</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
-    </div>
+      <p>Use this form to add a new supplier to the system.</p>
+    </section>
+
+    <section class="add-supplier-form">
+      <form id="add-supplier-form">
+        <label for="supplier-id">Supplier ID</label>
+        <input type="text" id="supplier-id" readonly />
+
+        <label for="supplier-name">Supplier Name</label>
+        <input type="text" id="supplier-name" required />
+
+        <label for="supplier-contact">Contact</label>
+        <input type="text" id="supplier-contact" required />
+
+        <label for="supplier-email">Email</label>
+        <input type="email" id="supplier-email" required />
+
+        <label for="supplier-address">Address</label>
+        <input type="text" id="supplier-address" required />
+
+        <button type="submit">Add Supplier</button>
+      </form>
+    </section>
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("supplier-id").value = generateSupplierID();
+    });
+
+    function generateSupplierID() {
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let supplierId = "SUP";
+      for (let i = 0; i < 5; i++) {
+        supplierId += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return supplierId;
+    }
+
+    document.getElementById("add-supplier-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const supplierId = document.getElementById("supplier-id").value;
+      const supplierName = document.getElementById("supplier-name").value;
+      const supplierContact = document.getElementById("supplier-contact").value;
+      const supplierEmail = document.getElementById("supplier-email").value;
+      const supplierAddress = document.getElementById("supplier-address").value;
+
+      const newSupplier = {
+        id: supplierId,
+        name: supplierName,
+        contact: supplierContact,
+        email: supplierEmail,
+        address: supplierAddress
+      };
+
+      let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      suppliers.push(newSupplier);
+      localStorage.setItem("suppliers", JSON.stringify(suppliers));
+
+      alert("Supplier added successfully!");
+
+      document.getElementById("add-supplier-form").reset();
+      document.getElementById("supplier-id").value = generateSupplierID();
+    });
+  </script>
 </body>
 </html>

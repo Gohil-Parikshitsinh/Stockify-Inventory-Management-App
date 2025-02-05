@@ -6,6 +6,87 @@
   <title>Update Supplier</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
+  <style>
+    /* Update Supplier Form Section */
+    .update-supplier-form {
+      background-color: var(--base-clr);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    .update-supplier-form h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--text-clr);
+      margin-bottom: 20px;
+    }
+
+    .update-supplier-form label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text-clr);
+    }
+
+    .update-supplier-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line-clr);
+      border-radius: 5px;
+      font-size: 1rem;
+      color: var(--text-clr);
+      margin-bottom: 15px;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Disable editing on Supplier ID */
+    #supplier-id {
+      background-color: var(--hover-clr);
+      cursor: not-allowed;
+    }
+
+    /* Button Styling */
+    .update-supplier-form button {
+      background-color: var(--accent-clr);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .update-supplier-form button:hover {
+      background-color: var(--line-clr);
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+      .update-supplier-form {
+        padding: 20px;
+      }
+
+      .update-supplier-form h2 {
+        font-size: 1.6rem;
+      }
+
+      .update-supplier-form input {
+        padding: 10px;
+        font-size: 0.95rem;
+      }
+
+      .update-supplier-form button {
+        font-size: 1.1rem;
+        padding: 10px 18px;
+      }
+    }
+  </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -75,10 +156,84 @@
     </ul>
   </nav>
   <main>
-    <div class="container">
+    <section class="dashboard-header">
       <h2>Update Supplier</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
-    </div>
+      <p>Modify supplier details. The Supplier ID cannot be changed.</p>
+    </section>
+
+    <section class="update-supplier-form">
+      <form id="update-supplier-form">
+        <label for="supplier-id">Supplier ID</label>
+        <input type="text" id="supplier-id" readonly />
+
+        <label for="supplier-name">Supplier Name</label>
+        <input type="text" id="supplier-name" required />
+
+        <label for="supplier-contact">Contact</label>
+        <input type="text" id="supplier-contact" required />
+
+        <label for="supplier-email">Email</label>
+        <input type="email" id="supplier-email" required />
+
+        <label for="supplier-address">Address</label>
+        <input type="text" id="supplier-address" required />
+
+        <button type="submit">Update Supplier</button>
+      </form>
+    </section>
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const supplierId = urlParams.get("id");
+
+      if (!supplierId) {
+        alert("No supplier ID provided!");
+        window.location.href = "/Website/Suppliers/view_suppliers.html";
+        return;
+      }
+
+      const suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      const supplier = suppliers.find((s) => s.id === supplierId);
+
+      if (!supplier) {
+        alert("Supplier not found!");
+        window.location.href = "/Website/Suppliers/view_suppliers.html";
+        return;
+      }
+
+      document.getElementById("supplier-id").value = supplier.id;
+      document.getElementById("supplier-name").value = supplier.name;
+      document.getElementById("supplier-contact").value = supplier.contact;
+      document.getElementById("supplier-email").value = supplier.email;
+      document.getElementById("supplier-address").value = supplier.address;
+    });
+
+    document.getElementById("update-supplier-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const supplierId = document.getElementById("supplier-id").value;
+      const supplierName = document.getElementById("supplier-name").value;
+      const supplierContact = document.getElementById("supplier-contact").value;
+      const supplierEmail = document.getElementById("supplier-email").value;
+      const supplierAddress = document.getElementById("supplier-address").value;
+
+      let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      const supplierIndex = suppliers.findIndex((s) => s.id === supplierId);
+
+      if (supplierIndex === -1) {
+        alert("Error: Supplier not found.");
+        return;
+      }
+      suppliers[supplierIndex].name = supplierName || suppliers[supplierIndex].name;
+      suppliers[supplierIndex].contact = supplierContact || suppliers[supplierIndex].contact;
+      suppliers[supplierIndex].email = supplierEmail || suppliers[supplierIndex].email;
+      suppliers[supplierIndex].address = supplierAddress || suppliers[supplierIndex].address;
+
+      localStorage.setItem("suppliers", JSON.stringify(suppliers));
+      alert("Supplier updated successfully!");
+    });
+  </script>
 </body>
 </html>

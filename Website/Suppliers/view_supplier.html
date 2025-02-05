@@ -6,6 +6,73 @@
   <title>View Suppliers</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
+  <style>
+      /* Supplier Table Section */
+      .supplier-table {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: var(--base-clr);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      th, td {
+        padding: 10px;
+        border: 1px solid var(--line-clr);
+        text-align: left;
+      }
+
+      th {
+        background-color: var(--accent-clr);
+        color: #fff;
+        font-weight: bold;
+      }
+
+      td {
+        background-color: var(--base-clr);
+        color: var(--text-clr);
+      }
+
+      tr:hover td {
+        background-color: var(--hover-clr);
+      }
+
+      button {
+        padding: 8px 12px;
+        border: none;
+        background-color: var(--accent-clr);
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: var(--line-clr);
+      }
+
+      .add_supplier {
+        margin: 5px 0 10px 0;
+      }
+
+      /* Responsiveness */
+      @media screen and (max-width: 768px) {
+        table th, table td {
+          padding: 10px;
+        }
+        table {
+          font-size: 14px;
+        }
+      }
+    </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -75,10 +142,87 @@
     </ul>
   </nav>
   <main>
-    <div class="container">
+    <section class="dashboard-header">
       <h2>View Suppliers</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
-    </div>
+      <p>Here is the list of all the suppliers.</p>
+    </section>
+
+    <section class="supplier-table">
+      <button onclick="window.location.href='/Website/Suppliers/add_supplier.html'" class="add_supplier">
+        Add Supplier
+      </button>
+      <table>
+        <thead>
+          <tr>
+            <th>Supplier ID</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="supplier-table-body"></tbody>
+      </table>
+    </section>
   </main>
+
+  <script>
+    function loadPresetSuppliers() {
+      let suppliers = JSON.parse(localStorage.getItem("suppliers"));
+
+      if (!suppliers || suppliers.length === 0) {
+        suppliers = [
+          { id: "SUP01A3", name: "TechMart", contact: "9876543210", email: "info@techmart.com", address: "Delhi, India" },
+          { id: "SUP74D20", name: "Office Solutions", contact: "9898989898", email: "support@officesol.com", address: "Mumbai, India" },
+          { id: "SUP92K41", name: "Gadget House", contact: "9777777777", email: "contact@gadgethouse.com", address: "Bangalore, India" },
+          { id: "SUP29Y57", name: "FastTrack Supplies", contact: "9888888888", email: "sales@fasttrack.com", address: "Chennai, India" }
+        ];
+        localStorage.setItem("suppliers", JSON.stringify(suppliers));
+      }
+    }
+
+    function displaySuppliers() {
+      if (!localStorage.getItem("suppliers")) {
+        loadPresetSuppliers();
+      }
+
+      let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      const tableBody = document.getElementById("supplier-table-body");
+      tableBody.innerHTML = "";
+
+      suppliers.forEach((supplier, index) => {
+        let row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${supplier.id}</td>
+          <td>${supplier.name}</td>
+          <td>${supplier.contact}</td>
+          <td>${supplier.email}</td>
+          <td>${supplier.address}</td>
+          <td>
+            <button onclick="updateSupplier('${supplier.id}')">Update</button>
+            <button onclick="deleteSupplier(${index})">Delete</button>
+          </td>
+        `;
+      });
+    }
+
+    function deleteSupplier(index) {
+      let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      suppliers.splice(index, 1);
+      localStorage.setItem("suppliers", JSON.stringify(suppliers));
+
+      displaySuppliers();
+    }
+
+    function updateSupplier(supplierId) {
+      window.location.href = `/Website/Suppliers/update_supplier.html?id=${supplierId}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPresetSuppliers();
+      displaySuppliers();
+    });
+  </script>
 </body>
 </html>
