@@ -1,0 +1,366 @@
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('your-background-image.jpg') center/cover no-repeat;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+.hero h1 { font-size: 3rem; font-weight: bold; }
+.hero p { font-size: 1.2rem; margin-top: 10px; }
+
+/* Product Images */
+.product-images img { border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+
+/* Pricing Section */
+.pricing-card { border-radius: 10px; text-align: center; transition: 0.3s; }
+.pricing-card:hover { transform: translateY(-5px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+
+/* Testimonials */
+.testimonial-card { background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center; }
+
+/* Footer */
+.footer { background: #343a40; color: white; text-align: center; padding: 20px; }
+/* ==== Global Styles ==== */
+/* ===== Navbar Styling (Professional, Modern, Minimalist) ===== */
+.navbar {
+background: #1f2937 !important; /* Dark Blue-Grey */
+padding: 15px 0;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+font-size: 1.8rem;
+font-weight: 600;
+color: #f8f9fa !important; /* Light Grayish White */
+}
+
+.navbar-nav .nav-link {
+font-size: 1.1rem;
+color: #e4e4e4 !important;
+padding: 10px 15px;
+transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover {
+color: #ffffff !important;
+transform: translateY(-2px);
+}
+
+/* Call to Action Button */
+.navbar-nav .btn-outline-light {
+border-radius: 50px;
+font-weight: 500;
+transition: 0.3s ease;
+}
+
+.navbar-nav .btn-outline-light:hover {
+background: #ffffff;
+color: #1f2937;
+}
+
+/* ===== Hero Section Styling (Minimalistic, Techie, Professional) ===== */
+.hero {
+background: #111827; /* Dark Blue-Black */
+color: #ffffff;
+padding: 100px 0;
+text-align: center;
+}
+
+.hero-title {
+font-size: 2.8rem;
+font-weight: 700;
+line-height: 1.2;
+}
+
+.hero-subtitle {
+font-size: 1.2rem;
+color: #d1d5db; /* Soft Gray */
+margin-bottom: 20px;
+}
+
+.hero-img {
+max-width: 80%;
+border-radius: 10px;
+box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Button Styling */
+.btn-primary {
+background: #2563eb; /* Blue */
+border: none;
+padding: 12px 24px;
+font-size: 1.2rem;
+border-radius: 50px;
+transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+background: #1e40af; /* Darker Blue */
+transform: translateY(-2px);
+}
+
+/* ===== Product Images Section (Minimalistic & Techie) ===== */
+.product-images {
+padding: 80px 0;
+background: #f9f9f9; /* Light Gray */
+text-align: center;
+}
+
+.section-title {
+font-size: 2.5rem;
+font-weight: 700;
+color: #111827;
+}
+
+.section-subtitle {
+font-size: 1.2rem;
+color: #4b5563;
+margin-bottom: 40px;
+}
+
+.product-card {
+background: #ffffff;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+transition: all 0.3s ease-in-out;
+}
+
+.product-card img {
+width: 100%;
+height: auto;
+border-radius: 10px;
+}
+
+.product-card h4 {
+margin-top: 15px;
+font-size: 1.4rem;
+font-weight: 600;
+color: #1f2937;
+}
+
+.product-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Pricing Section (Minimal & Tech-Inspired) ===== */
+.pricing-section {
+padding: 80px 0;
+background: #f9f9f9;
+text-align: center;
+}
+
+.section-title {
+font-size: 2.5rem;
+font-weight: 700;
+color: #111827;
+}
+
+.section-subtitle {
+font-size: 1.2rem;
+color: #4b5563;
+margin-bottom: 40px;
+}
+
+.pricing-card {
+background: #ffffff;
+padding: 30px;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+transition: all 0.3s ease-in-out;
+text-align: center;
+border-top: 4px solid transparent;
+}
+
+.pricing-card.popular {
+border-top: 4px solid #007bff;
+}
+
+.pricing-card h4 {
+font-size: 1.5rem;
+font-weight: 600;
+color: #1f2937;
+}
+
+.price {
+font-size: 1.8rem;
+font-weight: 700;
+color: #007bff;
+margin: 10px 0;
+}
+
+.pricing-features {
+list-style: none;
+padding: 0;
+margin-bottom: 20px;
+}
+
+.pricing-features li {
+font-size: 1rem;
+color: #4b5563;
+margin: 8px 0;
+}
+
+.pricing-card .btn {
+width: 100%;
+font-size: 1.1rem;
+padding: 10px;
+border-radius: 5px;
+}
+
+.pricing-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Testimonial Section (Minimal & Tech-Inspired) ===== */
+.testimonial-section {
+padding: 80px 0;
+background: #f9f9f9;
+text-align: center;
+}
+
+.section-title {
+font-size: 2.5rem;
+font-weight: 700;
+color: #111827;
+}
+
+.section-subtitle {
+font-size: 1.2rem;
+color: #4b5563;
+margin-bottom: 40px;
+}
+
+.testimonial-card {
+background: #ffffff;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+text-align: center;
+transition: all 0.3s ease-in-out;
+}
+
+.testimonial-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.testimonial-content {
+font-size: 1rem;
+color: #4b5563;
+margin-bottom: 15px;
+font-style: italic;
+}
+
+.testimonial-author {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+}
+
+.testimonial-author img {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+object-fit: cover;
+}
+
+.testimonial-author h5 {
+margin: 0;
+font-size: 1.1rem;
+color: #111827;
+}
+
+.testimonial-author p {
+margin: 0;
+font-size: 0.9rem;
+color: #6b7280;
+}
+/* ===== Feedback Form Styling ===== */
+.feedback-section {
+padding: 60px 0;
+background: #f9f9f9;
+text-align: center;
+}
+
+.section-title {
+font-size: 2rem;
+font-weight: 700;
+color: #111827;
+}
+
+.section-subtitle {
+font-size: 1rem;
+color: #4b5563;
+margin-bottom: 20px;
+}
+
+/* Form Styling */
+.form-control {
+padding: 10px;
+border-radius: 6px;
+border: 1px solid #ccc;
+font-size: 1rem;
+}
+
+.form-control:focus {
+border-color: #007bff;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn-primary {
+background-color: #007bff;
+border: none;
+padding: 10px 15px;
+font-size: 1rem;
+transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+background-color: #0056b3;
+}
+
+/* ===== Footer Styling ===== */
+.footer {
+background: #111827;
+color: #ffffff;
+padding: 40px 0;
+font-size: 0.9rem;
+}
+
+.footer h5 {
+font-size: 1.2rem;
+font-weight: 600;
+color: #f3f4f6;
+margin-bottom: 15px;
+}
+
+.footer-links {
+list-style: none;
+padding: 0;
+}
+
+.footer-links li {
+margin-bottom: 8px;
+}
+
+.footer-links a {
+color: #9ca3af;
+text-decoration: none;
+transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+color: #007bff; /* Soft yellow hover effect */
+}
+
+.footer-bottom {
+text-align: center;
+margin-top: 20px;
+padding-top: 10px;
+border-top: 1px solid #374151;
+}

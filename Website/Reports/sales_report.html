@@ -6,33 +6,66 @@
   <title>Sales Report</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="text/javascript" src="/Website/app.js" defer></script>
-  <style>
-    .sales-report {
-        max-width: 1000px;
-        margin: 20px auto;
-        padding: 20px;
-        background: var(--base-clr);
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .summary-card {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-    .card {
-        background: var(--hover-clr);
-        padding: 15px;
-        border-radius: 8px;
-        text-align: center;
-        flex: 1;
-    }
-    canvas {
-        max-width: 100%;
-    }
-</style>
+    <script type="text/javascript" src="/Website/app.js" defer></script>
+    <style>
+      .sales-report {
+          max-width: 1000px;
+          margin: 20px auto;
+          padding: 20px;
+          background: var(--base-clr);
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          text-align: center;
+      }
+      .summary-card {
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          margin-bottom: 20px;
+      }
+      .card {
+          background: var(--hover-clr);
+          padding: 15px;
+          border-radius: 8px;
+          text-align: center;
+          flex: 1;
+          min-width: 150px;
+      }
+      .chart-container {
+          width: 80%;
+          max-width: 600px;
+          height: 250px; /* 📏 Reduced height */
+          margin: 0 auto;
+      }
+      canvas {
+          max-width: 100%;
+          height: 100% !important; /* ✅ Force small size */
+      }
+
+      table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--line-clr);
+            text-align: left;
+        }
+        th {
+            background-color: var(--accent-clr);
+            color: #fff;
+        }
+        td {
+            background-color: var(--base-clr);
+            color: var(--text-clr);
+        }
+        tr:hover td {
+            background-color: var(--hover-clr);
+        }
+  </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -60,7 +93,6 @@
             <li><a href="/Website/Products/view_products.html">View Products</a></li>
             <li><a href="/Website/Products/add_products.html">Add Products</a></li>
             <li><a href="/Website/Products/update_products.html">Update Products</a></li>
-            <li><a href="/Website/Products/delete_products.html">Remove Products</a></li>
           </div>
         </ul>
       </li>
@@ -75,7 +107,6 @@
             <li><a href="/Website/Suppliers/view_supplier.html">View Suppliers</a></li>
             <li><a href="/Website/Suppliers/add_supplier.html">Add Suppliers</a></li>
             <li><a href="/Website/Suppliers/update_supplier.html">Update Suppliers</a></li>
-            <li><a href="/Website/Suppliers/delete_supplier.html">Remove Suppliers</a></li>
           </div>
         </ul>
       </li>
@@ -87,8 +118,16 @@
         </button>
         <ul class="sub-menu">
           <div>
-            <li class="active"><a href="/Website/Reports/sales_report.html">Sales Report</a></li>
-            <li><a href="/Website/Reports/purchase_report.html">Purchase Report</a></li>
+            <li><a href="/Website/Reports/sales.html">Add Sales</a></li>
+              <li><a href="/Website/Reports/purchase.html">Add Purchase</a></li>
+              <li>
+                <a href="/Website/Reports/sales_report.html">Sales Report</a>
+              </li>
+              <li>
+                <a href="/Website/Reports/purchase_report.html"
+                  >Purchase Report</a
+                >
+              </li>
           </div>
         </ul>
       </li>
@@ -104,7 +143,8 @@
   <main>
     <section class="sales-report">
         <h2>Sales Report</h2>
-        
+
+        <!-- Summary Section -->
         <div class="summary-card">
             <div class="card">
                 <h3>Total Sales</h3>
@@ -119,40 +159,118 @@
                 <p id="best-product">N/A</p>
             </div>
         </div>
-        
+
+        <!-- Sales Line Chart -->
         <h3>Sales Trends</h3>
-        <canvas id="salesChart"></canvas>
+<div class="chart-container">
+    <canvas id="salesChart"></canvas>
+</div>
+
+        <!-- Sales Data Table -->
+        <h3>Sales Transactions</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody id="sales-table-body"></tbody>
+        </table>
     </section>
 </main>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let salesData = JSON.parse(localStorage.getItem("sales")) || [
-            { date: "2024-02-01", amount: 5000 },
-            { date: "2024-02-02", amount: 7500 },
-            { date: "2024-02-03", amount: 6200 },
-            { date: "2024-02-04", amount: 8100 }
-        ];
-        
-        let totalSales = salesData.reduce((sum, sale) => sum + sale.amount, 0);
-        document.getElementById("total-sales").textContent = `₹${totalSales.toLocaleString()}`;
-        document.getElementById("total-orders").textContent = salesData.length;
-        
-        let ctx = document.getElementById("salesChart").getContext("2d");
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: salesData.map(sale => sale.date),
-                datasets: [{
-                    label: "Sales Trend",
-                    data: salesData.map(sale => sale.amount),
-                    borderColor: "#c8ad7f",
-                    backgroundColor: "rgba(200, 173, 127, 0.2)",
-                    fill: true
-                }]
-            }
-        });
+document.addEventListener("DOMContentLoaded", function () {
+    updateSalesReport();
+});
+
+function updateSalesReport() {
+    let sales = JSON.parse(localStorage.getItem("sales")) || [];
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    let totalSales = 0;
+    let totalOrders = sales.length;
+    let salesTableBody = document.getElementById("sales-table-body");
+    salesTableBody.innerHTML = "";
+
+    let productSalesCount = {};
+    let dailySales = {};
+
+    sales.forEach((sale, index) => {
+        let product = products.find(p => p.id === sale.productId);
+        let totalAmount = (product ? parseFloat(product.price.replace(/[^0-9]/g, "")) : 0) * sale.quantitySold;
+        totalSales += totalAmount;
+
+        // Track best-selling product
+        if (!productSalesCount[sale.productId]) {
+            productSalesCount[sale.productId] = { name: sale.productName, quantity: 0 };
+        }
+        productSalesCount[sale.productId].quantity += sale.quantitySold;
+
+        // Store daily sales data
+        dailySales[sale.saleDate] = (dailySales[sale.saleDate] || 0) + sale.quantitySold;
+
+        let row = salesTableBody.insertRow();
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${sale.productName}</td>
+            <td>${sale.quantitySold}</td>
+            <td>${sale.saleDate}</td>
+            <td>₹${totalAmount.toLocaleString()}</td>
+        `;
     });
+
+    // Find the best-selling product
+    let bestProduct = Object.values(productSalesCount).reduce((best, product) => 
+        product.quantity > (best.quantity || 0) ? product : best, {});
+    document.getElementById("best-product").textContent = bestProduct.name || "N/A";
+
+    // Update Summary
+    document.getElementById("total-sales").textContent = `₹${totalSales.toLocaleString()}`;
+    document.getElementById("total-orders").textContent = totalOrders;
+
+    // Update Sales Chart
+    updateSalesChart(dailySales);
+}
+function updateSalesChart(dailySales) {
+    let ctx = document.getElementById("salesChart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: Object.keys(dailySales),
+            datasets: [{
+                label: "Sales Trend",
+                data: Object.values(dailySales),
+                borderColor: "#c8ad7f",
+                backgroundColor: "rgba(200, 173, 127, 0.2)",
+                borderWidth: 2,
+                pointBackgroundColor: "#c8ad7f",
+                pointBorderColor: "#c8ad7f",
+                pointRadius: 4, /* 🔴 Smaller points */
+                fill: false,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: { display: true, text: "Date" }
+                },
+                y: {
+                    title: { display: true, text: "Units Sold" },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 </script>
 </body>
 </html>

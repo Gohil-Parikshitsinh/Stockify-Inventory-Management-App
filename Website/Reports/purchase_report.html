@@ -6,6 +6,65 @@
   <title>Purchase Report</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .purchase-report {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--base-clr);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .summary-card {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: var(--hover-clr);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        .chart-container {
+            width: 80%;
+            max-width: 600px;
+            height: 250px; /* 📏 Small Graph */
+            margin: 0 auto;
+        }
+        canvas {
+            max-width: 100%;
+            height: 100% !important; /* ✅ Force small size */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--line-clr);
+            text-align: left;
+        }
+        th {
+            background-color: var(--accent-clr);
+            color: #fff;
+        }
+        td {
+            background-color: var(--base-clr);
+            color: var(--text-clr);
+        }
+        tr:hover td {
+            background-color: var(--hover-clr);
+        }
+    </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -33,7 +92,6 @@
             <li><a href="/Website/Products/view_products.html">View Products</a></li>
             <li><a href="/Website/Products/add_products.html">Add Products</a></li>
             <li><a href="/Website/Products/update_products.html">Update Products</a></li>
-            <li><a href="/Website/Products/delete_products.html">Remove Products</a></li>
           </div>
         </ul>
       </li>
@@ -48,7 +106,6 @@
             <li><a href="/Website/Suppliers/view_supplier.html">View Suppliers</a></li>
             <li><a href="/Website/Suppliers/add_supplier.html">Add Suppliers</a></li>
             <li><a href="/Website/Suppliers/update_supplier.html">Update Suppliers</a></li>
-            <li><a href="/Website/Suppliers/delete_supplier.html">Remove Suppliers</a></li>
           </div>
         </ul>
       </li>
@@ -60,8 +117,16 @@
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="/Website/Reports/sales_report.html">Sales Report</a></li>
-            <li class="active"><a href="/Website/Reports/purchase_report.html">Purchase Report</a></li>
+            <li><a href="/Website/Reports/sales.html">Add Sales</a></li>
+              <li><a href="/Website/Reports/purchase.html">Add Purchase</a></li>
+              <li>
+                <a href="/Website/Reports/sales_report.html">Sales Report</a>
+              </li>
+              <li>
+                <a href="/Website/Reports/purchase_report.html"
+                  >Purchase Report</a
+                >
+              </li>
           </div>
         </ul>
       </li>
@@ -75,10 +140,139 @@
     </ul>
   </nav>
   <main>
-    <div class="container">
-      <h2>Purchase Report</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
-    </div>
-  </main>
+    <section class="purchase-report">
+        <h2>Purchase Report</h2>
+
+        <!-- Summary Section -->
+        <div class="summary-card">
+            <div class="card">
+                <h3>Total Purchases</h3>
+                <p id="total-purchases">₹0</p>
+            </div>
+            <div class="card">
+                <h3>Total Orders</h3>
+                <p id="total-orders">0</p>
+            </div>
+            <div class="card">
+                <h3>Top Purchased Product</h3>
+                <p id="top-product">N/A</p>
+            </div>
+        </div>
+
+        <!-- Purchase Line Chart -->
+        <h3>Purchase Trends</h3>
+        <div class="chart-container">
+            <canvas id="purchaseChart"></canvas>
+        </div>
+
+        <!-- Purchase Data Table -->
+        <h3>Purchase Transactions</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Supplier</th>
+                    <th>Date</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody id="purchase-table-body"></tbody>
+        </table>
+    </section>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        updatePurchaseReport();
+    });
+
+    function updatePurchaseReport() {
+        let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
+        let products = JSON.parse(localStorage.getItem("products")) || [];
+
+        let totalPurchases = 0;
+        let totalOrders = purchases.length;
+        let purchaseTableBody = document.getElementById("purchase-table-body");
+        purchaseTableBody.innerHTML = "";
+
+        let productPurchaseCount = {};
+        let dailyPurchases = {};
+
+        purchases.forEach((purchase, index) => {
+            let product = products.find(p => p.id === purchase.productId);
+            let totalAmount = purchase.price;
+            totalPurchases += totalAmount;
+
+            // Track most purchased product
+            if (!productPurchaseCount[purchase.productId]) {
+                productPurchaseCount[purchase.productId] = { name: purchase.product, quantity: 0 };
+            }
+            productPurchaseCount[purchase.productId].quantity += purchase.quantity;
+
+            // Store daily purchase data
+            dailyPurchases[purchase.date] = (dailyPurchases[purchase.date] || 0) + purchase.quantity;
+
+            let row = purchaseTableBody.insertRow();
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${purchase.product}</td>
+                <td>${purchase.quantity}</td>
+                <td>${purchase.supplier}</td>
+                <td>${purchase.date}</td>
+                <td>₹${totalAmount.toLocaleString()}</td>
+            `;
+        });
+
+        // Find the most purchased product
+        let topProduct = Object.values(productPurchaseCount).reduce((best, product) => 
+            product.quantity > (best.quantity || 0) ? product : best, {});
+        document.getElementById("top-product").textContent = topProduct.name || "N/A";
+
+        // Update Summary
+        document.getElementById("total-purchases").textContent = `₹${totalPurchases.toLocaleString()}`;
+        document.getElementById("total-orders").textContent = totalOrders;
+
+        // Update Purchase Chart
+        updatePurchaseChart(dailyPurchases);
+    }
+
+    function updatePurchaseChart(dailyPurchases) {
+        let ctx = document.getElementById("purchaseChart").getContext("2d");
+
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: Object.keys(dailyPurchases),
+                datasets: [{
+                    label: "Purchase Trend",
+                    data: Object.values(dailyPurchases),
+                    borderColor: "#4CAF50",
+                    backgroundColor: "rgba(76, 175, 80, 0.2)",
+                    borderWidth: 2,
+                    pointBackgroundColor: "#4CAF50",
+                    pointBorderColor: "#4CAF50",
+                    pointRadius: 4, /* 🔴 Smaller points */
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: { display: true, text: "Date" }
+                    },
+                    y: {
+                        title: { display: true, text: "Units Purchased" },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
