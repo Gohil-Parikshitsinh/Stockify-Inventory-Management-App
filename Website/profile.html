@@ -7,6 +7,110 @@
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript" src="app.js" defer></script>
 </head>
+<style>
+/* Profile Container */
+.container {
+  margin-left: 250px;
+  text-align: center;
+  max-width: 600px;
+  background: var(--hover-clr);
+  padding: 0 30px 30px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Header */
+.profile-header {
+  /* padding-bottom: 0.5px; */
+  border-bottom: 1px solid var(--line-clr);
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-clr);
+}
+
+.username {
+  font-size: 20px;
+  margin: 10px 0 5px;
+  color: var(--text-clr);
+}
+
+.email {
+  font-size: 14px;
+  color: var(--secondary-text-clr);
+}
+
+/* Profile Details */
+.profile-details {
+  margin-top: 1px;
+  text-align: left;
+}
+
+.detail {
+  margin-bottom: 12px;
+}
+
+.detail label {
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--text-clr);
+}
+
+.detail input, .detail select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid var(--line-clr);
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.detail input:focus, .detail select:focus {
+  border-color: var(--accent-clr);
+  outline: none;
+}
+
+/* Profile Buttons */
+.profile-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  width: 48%;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-btn {
+  background: var(--accent-clr);
+  color: white;
+  transition: background 0.5s ease;
+}
+
+.save-btn:hover {
+  background: var(--line-clr);
+}
+
+.cancel-btn {
+  background: #bbb;
+  color: black;
+}
+
+.cancel-btn:hover {
+  background: #999;
+}
+
+</style>
 <body>
   <nav id="sidebar">
     <ul>
@@ -17,7 +121,7 @@
         </button>
       </li>
       <li>
-        <a href="index.html">
+        <a href="/Website/index.html">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="undefined"><path d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
           <span>Dashboard</span>
         </a>
@@ -76,7 +180,46 @@
   <main>
     <div class="container">
       <h2>Profile</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
+      <div class="profile-card">
+        <div class="profile-header">
+          <img src="https://media.licdn.com/dms/image/v2/D4D03AQG9FaUs33-GYg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1732206466780?e=1744243200&v=beta&t=gOYEVLX73YgKIh_RAgJbZMLXiZGZ-tynfEX0fowbrJ0" alt="User Avatar" class="profile-pic">
+          <h3 class="username">Parikshitsinh Gohil</h3>
+          <p class="email">parikshitsinhgohil03@gmail.com</p>
+        </div>
+
+        <div class="profile-details">
+          <div class="detail">
+            <label>Name:</label>
+            <input type="text" value="Parikshitsinh Gohil">
+          </div>
+          <div class="detail">
+            <label>Email:</label>
+            <input type="email" value="parikshitsinhgohil03@gmail.com">
+          </div>
+          <div class="detail">
+            <label>Phone:</label>
+            <input type="tel" value="+8128544889">
+          </div>
+          <div class="detail">
+            <label>Company:</label>
+            <input type="text" value="Stockify Inc.">
+          </div>
+          <div class="detail">
+            <label>Country:</label>
+            <select>
+              <option>USA</option>
+              <option>Canada</option>
+              <option>UK</option>
+              <option selected>India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="profile-buttons">
+          <button class="save-btn">Save Changes</button>
+          <button class="cancel-btn">Cancel</button>
+        </div>
+      </div>
     </div>
   </main>
 </body>
