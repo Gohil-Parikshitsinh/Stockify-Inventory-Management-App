@@ -196,7 +196,7 @@
 
       if (!supplierId) {
         alert("No supplier ID provided!");
-        window.location.href = "/Website/Suppliers/view_suppliers.html";
+        window.location.href = "/Website/Suppliers/view_supplier.html";
         return;
       }
 
@@ -205,7 +205,7 @@
 
       if (!supplier) {
         alert("Supplier not found!");
-        window.location.href = "/Website/Suppliers/view_suppliers.html";
+        window.location.href = "/Website/Suppliers/view_supplier.html";
         return;
       }
 
@@ -239,6 +239,7 @@
 
       localStorage.setItem("suppliers", JSON.stringify(suppliers));
       alert("Supplier updated successfully!");
+      window.location.href = "/Website/Suppliers/view_supplier.html";
     });
   </script>
 </body>
