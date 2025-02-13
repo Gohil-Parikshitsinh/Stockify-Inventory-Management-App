@@ -1,8 +1,14 @@
 import tkinter as tk
 from tkinter.font import Font
-from tkinter import ttk, messagebox
+from tkinter import messagebox, filedialog, ttk
+from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt
+import random
+import string
+from datetime import datetime
+from datetime import date
+
+# import matplotlib.pyplot as plt
 
 # Function to handle button click events for sidebar
 def show_content(content, active_button=None):
@@ -439,31 +445,63 @@ for text, command in product_buttons:
 product_frame.pack(fill="x", pady=5)  # Add the product dropdown to the sidebar
 
 
-def sales_list():
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Function to generate a unique Purchase ID
+def generate_purchase_id():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+# Function to clear main content area
+def clear_main_content():
+    for widget in main_content.winfo_children():
+        widget.destroy()
+
+# View Purchase List
+def purchase_list():
     clear_main_content()
-    label = tk.Label(main_content, text="Sales List", font=("Arial", 16), bg="white", fg="#333")
+    label = tk.Label(main_content, text="Purchase List", font=("Arial", 16), bg="white", fg="#333")
     label.pack(pady=10)
 
-    # Table for sales list
-    columns = ("Sale ID", "Product", "Quantity", "Price", "Total")
+    columns = ("Purchase ID", "Product ID", "Quantity", "Purchase Price", "Total Cost", "Date")
     tree = ttk.Treeview(main_content, columns=columns, show="headings", height=10)
+
     for col in columns:
         tree.heading(col, text=col)
         tree.column(col, width=120)
-    for sale_id, sale_data in sales.items():
-        tree.insert("", tk.END, values=(sale_id, sale_data["product"], sale_data["quantity"], sale_data["price"], sale_data["total"]))
+
+    for purchase_id, purchase_data in purchases.items():
+        tree.insert("", tk.END, values=(
+            purchase_id, purchase_data["product_id"], purchase_data["quantity"],
+            purchase_data["purchase_price"], purchase_data["total_cost"], purchase_data["date"]
+        ))
+
     tree.pack(pady=10)
 
-def add_sale():
+
+def add_purchase():
     clear_main_content()
-    label = tk.Label(main_content, text="Add Sale", font=("Arial", 16), bg="white", fg="#333")
+    label = tk.Label(main_content, text="Add Purchase", font=("Arial", 16), bg="white", fg="#333")
     label.pack(pady=10)
 
-    tk.Label(main_content, text="Sale ID:", bg="white").pack(pady=5)
-    id_entry = tk.Entry(main_content)
-    id_entry.pack(pady=5)
-
-    tk.Label(main_content, text="Product:", bg="white").pack(pady=5)
+    tk.Label(main_content, text="Product ID:", bg="white").pack(pady=5)
     product_entry = tk.Entry(main_content)
     product_entry.pack(pady=5)
 
@@ -471,124 +509,517 @@ def add_sale():
     quantity_entry = tk.Entry(main_content)
     quantity_entry.pack(pady=5)
 
-    tk.Label(main_content, text="Price:", bg="white").pack(pady=5)
-    price_entry = tk.Entry(main_content)
-    price_entry.pack(pady=5)
+    tk.Label(main_content, text="Purchase Price:", bg="white").pack(pady=5)
+    purchase_price_entry = tk.Entry(main_content)
+    purchase_price_entry.pack(pady=5)
 
-    def submit_sale():
-        sale_id = id_entry.get()
-        product = product_entry.get()
-        quantity = quantity_entry.get()
-        price = price_entry.get()
+    def submit_purchase():
+        product_id = product_entry.get().strip()
+        quantity = quantity_entry.get().strip()
+        purchase_price = purchase_price_entry.get().strip()
 
-        if not sale_id.isdigit() or not quantity.isdigit() or not product or not price:
-            messagebox.showerror("Error", "All fields must be filled correctly.")
+        # Validation
+        if not product_id.isdigit():
+            messagebox.showerror("Error", "Product ID must be a number.")
             return
 
-        sale_id = int(sale_id)
-        quantity = int(quantity)
-        total = quantity * float(price[1:])  # Remove '$' and calculate total
+        if not quantity.isdigit() or int(quantity) <= 0:
+            messagebox.showerror("Error", "Quantity must be a positive number.")
+            return
 
-        sales[sale_id] = {
-            "product": product,
+        if not purchase_price.replace('.', '', 1).isdigit():
+            messagebox.showerror("Error", "Purchase price must be a valid number.")
+            return
+
+        product_id = int(product_id)
+        quantity = int(quantity)
+        purchase_price = float(purchase_price)
+
+        # Check if product exists
+        if product_id not in products:
+            messagebox.showerror("Error", f"Product ID {product_id} does not exist.")
+            return
+
+        # Generate Purchase ID
+        purchase_id = generate_purchase_id()
+        total_cost = quantity * purchase_price
+        purchase_date = date.today().strftime("%Y-%m-%d")  # FIXED THE ISSUE
+
+        # Store purchase details
+        purchases[purchase_id] = {
+            "product_id": product_id,
             "quantity": quantity,
-            "price": price,
-            "total": total
+            "purchase_price": purchase_price,
+            "total_cost": total_cost,
+            "date": purchase_date
         }
 
-        messagebox.showinfo("Success", f"Sale added for {product}. Total: ${total:.2f}")
+        # Update stock automatically
+        products[product_id]["stock"] += quantity
 
-    tk.Button(main_content, text="Submit", command=submit_sale).pack(pady=10)
+        messagebox.showinfo("Success", f"Purchase ID {purchase_id} added successfully.")
+        purchase_list()  # Refresh the purchase list
 
-def update_sale():
+    tk.Button(main_content, text="Submit", command=submit_purchase).pack(pady=10)
+
+
+# Update Purchase
+def update_purchase():
     clear_main_content()
-    label = tk.Label(main_content, text="Update Sale", font=("Arial", 16), bg="white", fg="#333")
+    label = tk.Label(main_content, text="Update Purchase", font=("Arial", 16), bg="white", fg="#333")
     label.pack(pady=10)
 
-    tk.Label(main_content, text="Sale ID:", bg="white").pack(pady=5)
-    id_entry = tk.Entry(main_content)
-    id_entry.pack(pady=5)
-
-    tk.Label(main_content, text="New Product (leave blank to skip):", bg="white").pack(pady=5)
-    product_entry = tk.Entry(main_content)
-    product_entry.pack(pady=5)
+    tk.Label(main_content, text="Purchase ID:", bg="white").pack(pady=5)
+    purchase_id_entry = tk.Entry(main_content)
+    purchase_id_entry.pack(pady=5)
 
     tk.Label(main_content, text="New Quantity (leave blank to skip):", bg="white").pack(pady=5)
     quantity_entry = tk.Entry(main_content)
     quantity_entry.pack(pady=5)
 
-    tk.Label(main_content, text="New Price (leave blank to skip):", bg="white").pack(pady=5)
-    price_entry = tk.Entry(main_content)
-    price_entry.pack(pady=5)
+    tk.Label(main_content, text="New Purchase Price (leave blank to skip):", bg="white").pack(pady=5)
+    purchase_price_entry = tk.Entry(main_content)
+    purchase_price_entry.pack(pady=5)
 
     def submit_update():
-        sale_id = id_entry.get()
-
-        if not sale_id.isdigit():
-            messagebox.showerror("Error", "Sale ID must be a number.")
+        purchase_id = purchase_id_entry.get()
+        if purchase_id not in purchases:
+            messagebox.showerror("Error", "Invalid Purchase ID.")
             return
 
-        sale_id = int(sale_id)
-
-        if sale_id not in sales:
-            messagebox.showerror("Error", f"Sale ID {sale_id} does not exist.")
-            return
-
-        product = product_entry.get()
         quantity = quantity_entry.get()
-        price = price_entry.get()
+        purchase_price = purchase_price_entry.get()
 
-        # Update only fields that are provided
-        if product:
-            sales[sale_id]["product"] = product
         if quantity:
-            sales[sale_id]["quantity"] = int(quantity)
-        if price:
-            sales[sale_id]["price"] = price
-            sales[sale_id]["total"] = int(quantity) * float(price[1:])  # Recalculate total price
+            purchases[purchase_id]["quantity"] = int(quantity)
+        if purchase_price:
+            purchases[purchase_id]["purchase_price"] = float(purchase_price)
 
-        messagebox.showinfo("Success", f"Sale ID {sale_id} updated successfully.")
+        purchases[purchase_id]["total_cost"] = purchases[purchase_id]["quantity"] * purchases[purchase_id]["purchase_price"]
+        messagebox.showinfo("Success", f"Purchase ID {purchase_id} updated successfully.")
 
     tk.Button(main_content, text="Submit", command=submit_update).pack(pady=10)
+
+# Remove Purchase
+def remove_purchase():
+    clear_main_content()
+    label = tk.Label(main_content, text="Remove Purchase", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    tk.Label(main_content, text="Purchase ID:", bg="white").pack(pady=5)
+    purchase_id_entry = tk.Entry(main_content)
+    purchase_id_entry.pack(pady=5)
+
+    def submit_remove():
+        purchase_id = purchase_id_entry.get()
+        if purchase_id not in purchases:
+            messagebox.showerror("Error", "Invalid Purchase ID.")
+            return
+
+        del purchases[purchase_id]
+        messagebox.showinfo("Success", f"Purchase ID {purchase_id} removed successfully.")
+
+    tk.Button(main_content, text="Submit", command=submit_remove).pack(pady=10)
+
+from tkinter import filedialog
+from datetime import datetime
+
+def purchase_report():
+    clear_main_content()
+
+    label = tk.Label(main_content, text="Generate Purchase Report", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    tk.Label(main_content, text="Start Date (YYYY-MM-DD):", bg="white").pack(pady=5)
+    start_date_entry = tk.Entry(main_content)
+    start_date_entry.pack(pady=5)
+
+    tk.Label(main_content, text="End Date (YYYY-MM-DD):", bg="white").pack(pady=5)
+    end_date_entry = tk.Entry(main_content)
+    end_date_entry.pack(pady=5)
+
+    def generate_report():
+        start_date_str = start_date_entry.get().strip()
+        end_date_str = end_date_entry.get().strip()
+
+        # Validate date format
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid date format. Use YYYY-MM-DD.")
+            return
+
+        # Filter purchases by date
+        filtered_purchases = [
+            (pid, details) for pid, details in purchases.items()
+            if start_date <= datetime.strptime(details["date"], "%Y-%m-%d") <= end_date
+        ]
+
+        if not filtered_purchases:
+            messagebox.showinfo("Info", "No purchases found in the selected date range.")
+            return
+
+        # Ask user where to save the file
+        file_path = filedialog.asksaveasfilename(defaultextension=".txt",
+                                                 filetypes=[("Text Files", "*.txt")],
+                                                 title="Save Purchase Report")
+        if not file_path:
+            return
+
+        # Write report to file
+        with open(file_path, "w") as file:
+            file.write(f"Purchase Report ({start_date_str} to {end_date_str})\n")
+            file.write("=" * 50 + "\n")
+            for pid, details in filtered_purchases:
+                file.write(f"Purchase ID: {pid}\n")
+                file.write(f"Product ID: {details['product_id']}\n")
+                file.write(f"Quantity: {details['quantity']}\n")
+                file.write(f"Purchase Price: {details['purchase_price']}\n")
+                file.write(f"Total Cost: {details['total_cost']}\n")
+                file.write(f"Date: {details['date']}\n")
+                file.write("-" * 50 + "\n")
+
+        messagebox.showinfo("Success", f"Purchase report saved to {file_path}")
+
+    tk.Button(main_content, text="Generate Report", command=generate_report).pack(pady=10)
+
+
+# Purchase section in Sidebar
+purchase_frame = tk.Frame(sidebar, bg="#f5f5f5")
+purchase_label = tk.Label(purchase_frame, text="Purchase", font=("Arial", 14, "bold"), bg="#f5f5f5", fg="#333333")
+purchase_label.pack(pady=(10, 0))
+purchase_buttons = [
+    ("Purchase List", purchase_list),
+    ("Add Purchase", add_purchase),
+    ("Update Purchase", update_purchase),
+    ("Remove Purchase", remove_purchase),
+    ("Purchase Report", purchase_report),  # ✅ New Button
+]
+
+purchases = {}
+
+
+for text, command in purchase_buttons:
+    tk.Button(
+        purchase_frame,
+        text=f"  {text}",
+        font=("Arial", 12),
+        bg="#ffffff",
+        fg="#333333",
+        activebackground="#e0f7fa",
+        activeforeground="#00796b",
+        relief="flat",
+        command=command,
+    ).pack(fill="x", padx=20, pady=2)
+
+purchase_frame.pack(fill="x", pady=5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sales = {}  # Dictionary to store sales
+import random
+import string
+import datetime
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+# Function to generate a unique Sale ID (random letters + numbers)
+def generate_sale_id():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+# Function to add a new sale
+def add_sale():
+    def submit_sale():
+        sale_id = generate_sale_id()
+        product_id = product_id_entry.get()
+        quantity = quantity_entry.get()
+        price = price_entry.get()
+        date = datetime.date.today().strftime("%Y-%m-%d")
+
+        if not product_id or not quantity or not price:
+            messagebox.showerror("Error", "All fields are required!")
+            return
+
+        try:
+            quantity = int(quantity)
+            price = float(price)
+            total = quantity * price
+
+            # Save to dictionary
+            sales[sale_id] = {
+                "product_id": product_id,
+                "quantity": quantity,
+                "price": price,
+                "total": total,
+                "date": date,
+            }
+
+            # Save sales data to file
+            with open("sales_data.txt", "a") as file:
+                file.write(f"{sale_id}|{product_id}|{quantity}|{price}|{total}|{date}\n")
+
+            messagebox.showinfo("Success", f"Sale {sale_id} added successfully!")
+            sale_window.destroy()
+
+        except ValueError:
+            messagebox.showerror("Error", "Invalid quantity or price!")
+
+    sale_window = tk.Toplevel()
+    sale_window.title("Add Sale")
+    sale_window.geometry("350x300")
+
+    tk.Label(sale_window, text="Product ID:").pack()
+    product_id_entry = tk.Entry(sale_window)
+    product_id_entry.pack()
+
+    tk.Label(sale_window, text="Quantity:").pack()
+    quantity_entry = tk.Entry(sale_window)
+    quantity_entry.pack()
+
+    tk.Label(sale_window, text="Price:").pack()
+    price_entry = tk.Entry(sale_window)
+    price_entry.pack()
+
+    submit_btn = tk.Button(sale_window, text="Add Sale", command=submit_sale)
+    submit_btn.pack(pady=10)
+
+
+def view_sales():
+    clear_main_content()
+
+    label = tk.Label(main_content, text="Sales Records", font=("Arial", 16, "bold"), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    columns = ("Sale ID", "Product ID", "Quantity", "Price", "Total", "Date")
+
+    sales_tree = ttk.Treeview(main_content, columns=columns, show="headings", height=15)
+
+    # Define column headings
+    for col in columns:
+        sales_tree.heading(col, text=col)
+        sales_tree.column(col, width=120)
+
+    # Add scrollbar
+    scrollbar = ttk.Scrollbar(main_content, orient="vertical", command=sales_tree.yview)
+    sales_tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+
+    # Load sales data into the view
+    try:
+        with open("sales_data.txt", "r") as file:
+            for line in file:
+                sale_id, product_id, quantity, price, total, date = line.strip().split("|")
+                sales_tree.insert("", tk.END, values=(sale_id, product_id, quantity, price, total, date))
+    except FileNotFoundError:
+        pass  # If file doesn't exist, keep sales list empty
+
+    sales_tree.pack(pady=10, fill="both", expand=True)
+
 def remove_sale():
+    def delete_selected():
+        selected_item = tree.selection()
+        if not selected_item:
+            messagebox.showerror("Error", "No sale selected!")
+            return
+
+        sale_id = tree.item(selected_item)["values"][0]
+        tree.delete(selected_item)
+
+        if sale_id in sales:
+            del sales[sale_id]
+
+        # Update file after deletion
+        with open("sales_data.txt", "w") as file:
+            for key, sale_data in sales.items():
+                file.write(f"{key}|{sale_data['product_id']}|{sale_data['quantity']}|{sale_data['price']}|{sale_data['total']}|{sale_data['date']}\n")
+
+        messagebox.showinfo("Success", f"Sale {sale_id} removed!")
+
     clear_main_content()
     label = tk.Label(main_content, text="Remove Sale", font=("Arial", 16), bg="white", fg="#333")
     label.pack(pady=10)
 
-    tk.Label(main_content, text="Sale ID:", bg="white").pack(pady=5)
-    id_entry = tk.Entry(main_content)
-    id_entry.pack(pady=5)
+    columns = ("Sale ID", "Product ID", "Quantity", "Price", "Total", "Date")
+    tree = ttk.Treeview(main_content, columns=columns, show="headings", height=10)
 
-    def submit_remove():
-        sale_id = id_entry.get()
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=120)
 
-        if not sale_id.isdigit():
-            messagebox.showerror("Error", "Sale ID must be a number.")
+    try:
+        with open("sales_data.txt", "r") as file:
+            for line in file:
+                sale_id, product_id, quantity, price, total, date = line.strip().split("|")
+                tree.insert("", tk.END, values=(sale_id, product_id, quantity, price, total, date))
+    except FileNotFoundError:
+        pass
+
+    tree.pack(pady=10)
+    delete_btn = tk.Button(main_content, text="Delete Sale", command=delete_selected)
+    delete_btn.pack(pady=10)
+
+def export_sales_report():
+    def save_report():
+        start_date = start_date_entry.get()
+        end_date = end_date_entry.get()
+        report_file = "sales_report.txt"
+
+        with open(report_file, "w") as file:
+            file.write("Sale ID | Product ID | Quantity | Price | Total | Date\n")
+            file.write("-" * 50 + "\n")
+
+            with open("sales_data.txt", "r") as sales_file:
+                for line in sales_file:
+                    sale_id, product_id, quantity, price, total, date = line.strip().split("|")
+
+                    if start_date <= date <= end_date:
+                        file.write(f"{sale_id} | {product_id} | {quantity} | {price} | {total} | {date}\n")
+
+        messagebox.showinfo("Success", f"Sales report saved as {report_file}")
+        report_window.destroy()
+
+    report_window = tk.Toplevel()
+    report_window.title("Export Sales Report")
+    report_window.geometry("300x200")
+
+    tk.Label(report_window, text="Start Date (YYYY-MM-DD):").pack()
+    start_date_entry = tk.Entry(report_window)
+    start_date_entry.pack()
+
+    tk.Label(report_window, text="End Date (YYYY-MM-DD):").pack()
+    end_date_entry = tk.Entry(report_window)
+    end_date_entry.pack()
+
+    save_button = tk.Button(report_window, text="Export Report", command=save_report)
+    save_button.pack(pady=10)
+
+def update_sale():
+    def select_sale():
+        selected_item = tree.selection()
+        if not selected_item:
+            messagebox.showerror("Error", "No sale selected!")
             return
 
-        sale_id = int(sale_id)
+        sale_id = tree.item(selected_item)["values"][0]
+        sale_data = sales[sale_id]
 
-        if sale_id not in sales:
-            messagebox.showerror("Error", f"Sale ID {sale_id} does not exist.")
-            return
+        update_window = tk.Toplevel()
+        update_window.title("Update Sale")
+        update_window.geometry("350x300")
 
-        del sales[sale_id]
-        messagebox.showinfo("Success", f"Sale ID {sale_id} removed successfully.")
+        tk.Label(update_window, text="Product ID:").pack()
+        product_id_entry = tk.Entry(update_window)
+        product_id_entry.insert(0, sale_data["product_id"])
+        product_id_entry.pack()
 
-    tk.Button(main_content, text="Submit", command=submit_remove).pack(pady=10)
+        tk.Label(update_window, text="Quantity:").pack()
+        quantity_entry = tk.Entry(update_window)
+        quantity_entry.insert(0, sale_data["quantity"])
+        quantity_entry.pack()
 
-# Sidebar dropdown for Sales
+        tk.Label(update_window, text="Price:").pack()
+        price_entry = tk.Entry(update_window)
+        price_entry.insert(0, sale_data["price"])
+        price_entry.pack()
+
+        def save_update():
+            new_product_id = product_id_entry.get()
+            new_quantity = quantity_entry.get()
+            new_price = price_entry.get()
+
+            if not new_product_id or not new_quantity or not new_price:
+                messagebox.showerror("Error", "All fields are required!")
+                return
+
+            try:
+                new_quantity = int(new_quantity)
+                new_price = float(new_price)
+                new_total = new_quantity * new_price
+
+                # Update the dictionary
+                sales[sale_id] = {
+                    "product_id": new_product_id,
+                    "quantity": new_quantity,
+                    "price": new_price,
+                    "total": new_total,
+                    "date": sale_data["date"],  # Keep the same date
+                }
+
+                # Update the file
+                with open("sales_data.txt", "w") as file:
+                    for key, sale in sales.items():
+                        file.write(f"{key}|{sale['product_id']}|{sale['quantity']}|{sale['price']}|{sale['total']}|{sale['date']}\n")
+
+                messagebox.showinfo("Success", f"Sale {sale_id} updated successfully!")
+                update_window.destroy()
+                tree.item(selected_item, values=(sale_id, new_product_id, new_quantity, new_price, new_total, sale_data["date"]))
+
+            except ValueError:
+                messagebox.showerror("Error", "Invalid quantity or price!")
+
+        save_btn = tk.Button(update_window, text="Save Changes", command=save_update)
+        save_btn.pack(pady=10)
+
+    clear_main_content()
+
+    label = tk.Label(main_content, text="Update Sale", font=("Arial", 16), bg="white", fg="#333")
+    label.pack(pady=10)
+
+    columns = ("Sale ID", "Product ID", "Quantity", "Price", "Total", "Date")
+    tree = ttk.Treeview(main_content, columns=columns, show="headings", height=10)
+
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=120)
+
+    try:
+        with open("sales_data.txt", "r") as file:
+            for line in file:
+                sale_id, product_id, quantity, price, total, date = line.strip().split("|")
+                sales[sale_id] = {"product_id": product_id, "quantity": quantity, "price": price, "total": total, "date": date}
+                tree.insert("", tk.END, values=(sale_id, product_id, quantity, price, total, date))
+    except FileNotFoundError:
+        pass
+
+    tree.pack(pady=10)
+    update_btn = tk.Button(main_content, text="Update Selected Sale", command=select_sale)
+    update_btn.pack(pady=10)
+
+
+
+
+# Purchase section in Sidebar
 sales_frame = tk.Frame(sidebar, bg="#f5f5f5")
 sales_label = tk.Label(sales_frame, text="Sales", font=("Arial", 14, "bold"), bg="#f5f5f5", fg="#333333")
 sales_label.pack(pady=(10, 0))
-
-# Sales-related buttons
 sales_buttons = [
-    ("Sales List", sales_list),
+    ("View Sales", view_sales),
     ("Add Sale", add_sale),
     ("Update Sale", update_sale),
     ("Remove Sale", remove_sale),
+    ("Export Sales Report", export_sales_report)
 ]
+
+
+sales = {}
+
 
 for text, command in sales_buttons:
     tk.Button(
@@ -606,9 +1037,12 @@ for text, command in sales_buttons:
 sales_frame.pack(fill="x", pady=5)
 
 
-# Set command with a reference to the button itself
-for i, (text, content) in enumerate(buttons):
-    sidebar_buttons[i].config(command=lambda c=content, b=sidebar_buttons[i]: show_content(c, b))
+
+
+
+
+
+
 
 # Main content frame
 main_content = tk.Frame(root, bg="white")
