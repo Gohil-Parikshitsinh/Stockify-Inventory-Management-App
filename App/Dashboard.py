@@ -444,27 +444,6 @@ for text, command in product_buttons:
 
 product_frame.pack(fill="x", pady=5)  # Add the product dropdown to the sidebar
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Function to generate a unique Purchase ID
 def generate_purchase_id():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
@@ -714,22 +693,6 @@ for text, command in purchase_buttons:
     ).pack(fill="x", padx=20, pady=2)
 
 purchase_frame.pack(fill="x", pady=5)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1002,9 +965,6 @@ def update_sale():
     update_btn = tk.Button(main_content, text="Update Selected Sale", command=select_sale)
     update_btn.pack(pady=10)
 
-
-
-
 # Purchase section in Sidebar
 sales_frame = tk.Frame(sidebar, bg="#f5f5f5")
 sales_label = tk.Label(sales_frame, text="Sales", font=("Arial", 14, "bold"), bg="#f5f5f5", fg="#333333")
@@ -1017,9 +977,7 @@ sales_buttons = [
     ("Export Sales Report", export_sales_report)
 ]
 
-
 sales = {}
-
 
 for text, command in sales_buttons:
     tk.Button(
@@ -1035,14 +993,6 @@ for text, command in sales_buttons:
     ).pack(fill="x", padx=20, pady=2)
 
 sales_frame.pack(fill="x", pady=5)
-
-
-
-
-
-
-
-
 
 # Main content frame
 main_content = tk.Frame(root, bg="white")
