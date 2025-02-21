@@ -34,12 +34,12 @@
       .chart-container {
           width: 80%;
           max-width: 600px;
-          height: 250px; /* 📏 Reduced height */
+          height: 250px; 
           margin: 0 auto;
       }
       canvas {
           max-width: 100%;
-          height: 100% !important; /* ✅ Force small size */
+          height: 100% !important; 
       }
 
       table {
@@ -166,7 +166,7 @@
     <canvas id="salesChart"></canvas>
 </div>
 
-        <!-- Sales Data Table -->
+        <!-- Sales Table -->
         <h3>Sales Transactions</h3>
         <table>
             <thead>
@@ -205,13 +205,13 @@ function updateSalesReport() {
         let totalAmount = (product ? parseFloat(product.price.replace(/[^0-9]/g, "")) : 0) * sale.quantitySold;
         totalSales += totalAmount;
 
-        // Track best-selling product
+        // best-selling product
         if (!productSalesCount[sale.productId]) {
             productSalesCount[sale.productId] = { name: sale.productName, quantity: 0 };
         }
         productSalesCount[sale.productId].quantity += sale.quantitySold;
 
-        // Store daily sales data
+        // daily sales data
         dailySales[sale.saleDate] = (dailySales[sale.saleDate] || 0) + sale.quantitySold;
 
         let row = salesTableBody.insertRow();
@@ -224,7 +224,7 @@ function updateSalesReport() {
         `;
     });
 
-    // Find the best-selling product
+    // Find best-selling product
     let bestProduct = Object.values(productSalesCount).reduce((best, product) => 
         product.quantity > (best.quantity || 0) ? product : best, {});
     document.getElementById("best-product").textContent = bestProduct.name || "N/A";

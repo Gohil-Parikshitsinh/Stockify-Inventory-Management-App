@@ -235,11 +235,11 @@
                 return;
             }
 
-            // Update product stock
+            // Update product quantity
             product.quantity += quantity;
             localStorage.setItem("products", JSON.stringify(products));
 
-            // Save purchase record
+            // Save purchase data
             let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
             purchases.push({ product: product.name, supplier: supplierId, quantity, price, date });
             localStorage.setItem("purchases", JSON.stringify(purchases));

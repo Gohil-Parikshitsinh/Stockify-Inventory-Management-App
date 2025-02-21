@@ -34,12 +34,12 @@
         .chart-container {
             width: 80%;
             max-width: 600px;
-            height: 250px; /* 📏 Small Graph */
+            height: 250px;
             margin: 0 auto;
         }
         canvas {
             max-width: 100%;
-            height: 100% !important; /* ✅ Force small size */
+            height: 100% !important; 
         }
         table {
             width: 100%;
@@ -143,7 +143,7 @@
     <section class="purchase-report">
         <h2>Purchase Report</h2>
 
-        <!-- Summary Section -->
+        <!-- Summary -->
         <div class="summary-card">
             <div class="card">
                 <h3>Total Purchases</h3>
@@ -165,7 +165,7 @@
             <canvas id="purchaseChart"></canvas>
         </div>
 
-        <!-- Purchase Data Table -->
+        <!-- Purchase Table -->
         <h3>Purchase Transactions</h3>
         <table>
             <thead>
@@ -253,7 +253,7 @@
                     borderWidth: 2,
                     pointBackgroundColor: "#4CAF50",
                     pointBorderColor: "#4CAF50",
-                    pointRadius: 4, /* 🔴 Smaller points */
+                    pointRadius: 4,
                     fill: false,
                     tension: 0.3
                 }]
