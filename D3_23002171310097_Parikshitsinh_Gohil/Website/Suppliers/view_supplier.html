@@ -3,67 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purchase Report</title>
+  <title>View Suppliers</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .purchase-report {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: var(--base-clr);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .summary-card {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .card {
-            background: var(--hover-clr);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            flex: 1;
-            min-width: 150px;
-        }
-        .chart-container {
-            width: 80%;
-            max-width: 600px;
-            height: 250px;
-            margin: 0 auto;
-        }
-        canvas {
-            max-width: 100%;
-            height: 100% !important; 
+  <style>
+      .supplier-table {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: var(--base-clr);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      th, td {
+        padding: 10px;
+        border: 1px solid var(--line-clr);
+        text-align: left;
+      }
+
+      th {
+        background-color: var(--accent-clr);
+        color: #fff;
+        font-weight: bold;
+      }
+
+      td {
+        background-color: var(--base-clr);
+        color: var(--text-clr);
+      }
+
+      tr:hover td {
+        background-color: var(--hover-clr);
+      }
+
+      button {
+        padding: 8px 12px;
+        border: none;
+        background-color: var(--accent-clr);
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: var(--line-clr);
+      }
+
+      .add_supplier {
+        margin: 5px 0 10px 0;
+      }
+
+      @media screen and (max-width: 768px) {
+        table th, table td {
+          padding: 10px;
         }
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
+          font-size: 14px;
         }
-        th, td {
-            padding: 12px;
-            border: 1px solid var(--line-clr);
-            text-align: left;
-        }
-        th {
-            background-color: var(--accent-clr);
-            color: #fff;
-        }
-        td {
-            background-color: var(--base-clr);
-            color: var(--text-clr);
-        }
-        tr:hover td {
-            background-color: var(--hover-clr);
-        }
+      }
     </style>
 </head>
 <body>
@@ -103,7 +109,7 @@
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="/Website/Suppliers/view_supplier.html">View Suppliers</a></li>
+            <li class="active"><a href="/Website/Suppliers/view_supplier.html">View Suppliers</a></li>
             <li><a href="/Website/Suppliers/add_supplier.html">Add Suppliers</a></li>
             <li><a href="/Website/Suppliers/update_supplier.html">Update Suppliers</a></li>
           </div>
@@ -140,136 +146,88 @@
     </ul>
   </nav>
   <main>
-    <section class="purchase-report">
-        <h2>Purchase Report</h2>
-
-        <!-- ***** Summary ***** -->
-        <div class="summary-card">
-            <div class="card">
-                <h3>Total Purchases</h3>
-                <p id="total-purchases">₹0</p>
-            </div>
-            <div class="card">
-                <h3>Total Orders</h3>
-                <p id="total-orders">0</p>
-            </div>
-            <div class="card">
-                <h3>Top Purchased Product</h3>
-                <p id="top-product">N/A</p>
-            </div>
-        </div>
-
-        <!-- ***** Purchase Line Chart ***** -->
-        <h3>Purchase Trends</h3>
-        <div class="chart-container">
-            <canvas id="purchaseChart"></canvas>
-        </div>
-
-        <!-- ***** Purchase Table ***** -->
-        <h3>Purchase Transactions</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr. No.</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Date</th>
-                    <th>Total Cost</th>
-                </tr>
-            </thead>
-            <tbody id="purchase-table-body"></tbody>
-        </table>
+    <section class="dashboard-header">
+      <h2>View Suppliers</h2>
+      <p>Here is the list of all the suppliers.</p>
     </section>
-</main>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    updatePurchaseReport();
-  });
-  
-  function updatePurchaseReport() {
-      let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
-      let products = JSON.parse(localStorage.getItem("products")) || [];
-  
-      let totalPurchases = 0;
-      let totalOrders = purchases.length;
-      let purchaseTableBody = document.getElementById("purchase-table-body");
-      purchaseTableBody.innerHTML = "";
-  
-      let productPurchaseCount = {};
-      let dailyPurchases = {};
-  
-      purchases.forEach((purchase, index) => {
-          let product = products.find(p => p.id === purchase.productId);
-          let totalAmount = purchase.price;
-          totalPurchases += totalAmount;
-      
-          // Track most purchased product
-          if (!productPurchaseCount[purchase.productId]) {
-              productPurchaseCount[purchase.productId] = { name: purchase.product, quantity: 0 };
-          }
-          productPurchaseCount[purchase.productId].quantity += purchase.quantity;
-        
-          // Daily purchase data
-          dailyPurchases[purchase.date] = (dailyPurchases[purchase.date] || 0) + purchase.quantity;
-        
-          let row = purchaseTableBody.insertRow();
-          row.innerHTML = `
-              <td>${index + 1}</td>
-              <td>${purchase.product}</td>
-              <td>${purchase.quantity}</td>
-              <td>${purchase.date}</td>
-              <td>₹${totalAmount.toLocaleString()}</td>
-          `;
+
+    <section class="supplier-table">
+      <button onclick="window.location.href='/Website/Suppliers/add_supplier.html'" class="add_supplier">
+        Add Supplier
+      </button>
+      <table>
+        <thead>
+          <tr>
+            <th>Supplier ID</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="supplier-table-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // preset data
+    function loadPresetSuppliers() {
+      let suppliers = JSON.parse(localStorage.getItem("suppliers"));
+
+      if (!suppliers || suppliers.length === 0) {
+        suppliers = [
+          { id: "SUP01A3", name: "TechMart", contact: "9876543210", email: "info@techmart.com", address: "Delhi, India" },
+          { id: "SUP74D20", name: "Office Solutions", contact: "9898989898", email: "support@officesol.com", address: "Mumbai, India" },
+          { id: "SUP92K41", name: "Gadget House", contact: "9777777777", email: "contact@gadgethouse.com", address: "Bangalore, India" },
+          { id: "SUP29Y57", name: "FastTrack Supplies", contact: "9888888888", email: "sales@fasttrack.com", address: "Chennai, India" }
+        ];
+        localStorage.setItem("suppliers", JSON.stringify(suppliers));
+      }
+    }
+
+    function displaySuppliers() {
+      if (!localStorage.getItem("suppliers")) {
+        loadPresetSuppliers();
+      }
+
+      let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      const tableBody = document.getElementById("supplier-table-body");
+      tableBody.innerHTML = "";
+
+      suppliers.forEach((supplier, index) => {
+        let row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${supplier.id}</td>
+          <td>${supplier.name}</td>
+          <td>${supplier.contact}</td>
+          <td>${supplier.email}</td>
+          <td>${supplier.address}</td>
+          <td>
+            <button onclick="updateSupplier('${supplier.id}')">Update</button>
+            <button onclick="deleteSupplier(${index})">Delete</button>
+          </td>
+        `;
       });
-    
-      // Find the most purchased product
-      let topProduct = Object.values(productPurchaseCount).reduce((best, product) => 
-          product.quantity > (best.quantity || 0) ? product : best, {});
-      document.getElementById("top-product").textContent = topProduct.name || "N/A";
-    
-      // Update summary
-      document.getElementById("total-purchases").textContent = `₹${totalPurchases.toLocaleString()}`;
-      document.getElementById("total-orders").textContent = totalOrders;
-    
-      // Update purchase chart
-      updatePurchaseChart(dailyPurchases);
-  }
-  
-  function updatePurchaseChart(dailyPurchases) {
-      let ctx = document.getElementById("purchaseChart").getContext("2d");
-  
-      new Chart(ctx, {
-          type: "line",
-          data: {
-              labels: Object.keys(dailyPurchases),
-              datasets: [{
-                  label: "Purchase Trend",
-                  data: Object.values(dailyPurchases),
-                  borderColor: "#4CAF50",
-                  backgroundColor: "rgba(76, 175, 80, 0.2)",
-                  borderWidth: 2,
-                  pointBackgroundColor: "#4CAF50",
-                  pointBorderColor: "#4CAF50",
-                  pointRadius: 4,
-                  fill: false,
-                  tension: 0.3
-              }]
-          },
-          options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                  x: {
-                      title: { display: true, text: "Date" }
-                  },
-                  y: {
-                      title: { display: true, text: "Units Purchased" },
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
-  }
-</script>
+    }
+
+    function deleteSupplier(index) {
+      let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+      suppliers.splice(index, 1);
+      localStorage.setItem("suppliers", JSON.stringify(suppliers));
+
+      displaySuppliers();
+    }
+
+    function updateSupplier(supplierId) {
+      window.location.href = `/Website/Suppliers/update_supplier.html?id=${supplierId}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPresetSuppliers();
+      displaySuppliers();
+    });
+  </script>
 </body>
 </html>

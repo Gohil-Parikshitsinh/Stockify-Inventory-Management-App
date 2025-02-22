@@ -3,68 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purchase Report</title>
+  <title>Update Product</title>
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .purchase-report {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: var(--base-clr);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .summary-card {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .card {
-            background: var(--hover-clr);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            flex: 1;
-            min-width: 150px;
-        }
-        .chart-container {
-            width: 80%;
-            max-width: 600px;
-            height: 250px;
-            margin: 0 auto;
-        }
-        canvas {
-            max-width: 100%;
-            height: 100% !important; 
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid var(--line-clr);
-            text-align: left;
-        }
-        th {
-            background-color: var(--accent-clr);
-            color: #fff;
-        }
-        td {
-            background-color: var(--base-clr);
-            color: var(--text-clr);
-        }
-        tr:hover td {
-            background-color: var(--hover-clr);
-        }
-    </style>
+  <style>
+    .update-product-form {
+      background-color: var(--base-clr);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      margin: 20px auto;
+    }
+    .update-product-form h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--text-clr);
+      margin-bottom: 20px;
+    }
+    .update-product-form label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text-clr);
+    }
+    .update-product-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line-clr);
+      border-radius: 5px;
+      font-size: 1rem;
+      color: var(--text-clr);
+      margin-bottom: 15px;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+    .update-product-form input[readonly] {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
+    }
+    .update-product-form button {
+      background-color: var(--accent-clr);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+    .update-product-form button:hover {
+      background-color: var(--hover-clr);
+    }
+  </style>
+  </style>
 </head>
 <body>
   <nav id="sidebar">
@@ -91,7 +84,7 @@
           <div>
             <li><a href="/Website/Products/view_products.html">View Products</a></li>
             <li><a href="/Website/Products/add_products.html">Add Products</a></li>
-            <li><a href="/Website/Products/update_products.html">Update Products</a></li>
+            <li class="active"><a href="/Website/Products/update_products.html">Update Products</a></li>
           </div>
         </ul>
       </li>
@@ -118,15 +111,9 @@
         <ul class="sub-menu">
           <div>
             <li><a href="/Website/Reports/sales.html">Add Sales</a></li>
-              <li><a href="/Website/Reports/purchase.html">Add Purchase</a></li>
-              <li>
-                <a href="/Website/Reports/sales_report.html">Sales Report</a>
-              </li>
-              <li>
-                <a href="/Website/Reports/purchase_report.html"
-                  >Purchase Report</a
-                >
-              </li>
+                  <li><a href="/Website/Reports/purchase.html">Add Purchase</a></li>
+                <li><a href="/Website/Reports/sales_report.html">Sales Report</a></li>
+                <li><a href="/Website/Reports/purchase_report.html">Purchase Report</a></li>
           </div>
         </ul>
       </li>
@@ -140,136 +127,86 @@
     </ul>
   </nav>
   <main>
-    <section class="purchase-report">
-        <h2>Purchase Report</h2>
-
-        <!-- ***** Summary ***** -->
-        <div class="summary-card">
-            <div class="card">
-                <h3>Total Purchases</h3>
-                <p id="total-purchases">₹0</p>
-            </div>
-            <div class="card">
-                <h3>Total Orders</h3>
-                <p id="total-orders">0</p>
-            </div>
-            <div class="card">
-                <h3>Top Purchased Product</h3>
-                <p id="top-product">N/A</p>
-            </div>
-        </div>
-
-        <!-- ***** Purchase Line Chart ***** -->
-        <h3>Purchase Trends</h3>
-        <div class="chart-container">
-            <canvas id="purchaseChart"></canvas>
-        </div>
-
-        <!-- ***** Purchase Table ***** -->
-        <h3>Purchase Transactions</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr. No.</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Date</th>
-                    <th>Total Cost</th>
-                </tr>
-            </thead>
-            <tbody id="purchase-table-body"></tbody>
-        </table>
+    <section class="dashboard-header">
+      <h2>Update Product</h2>
+      <p>Modify the product details as needed. The Product ID cannot be changed.</p>
     </section>
-</main>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    updatePurchaseReport();
-  });
-  
-  function updatePurchaseReport() {
-      let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
+
+    <!-- Update Form -->
+    <section class="update-product-form">
+      <form id="update-product-form">
+        <label for="product-id">Product ID</label>
+        <input type="text" id="product-id" readonly>
+
+        <label for="product-name">Product Name</label>
+        <input type="text" id="product-name">
+
+        <label for="category">Category</label>
+        <input type="text" id="category">
+
+        <label for="price">Price</label>
+        <input type="text" id="price">
+
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity">
+
+        <button type="submit">Update Product</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("update-product-form");
+
+      // gets the ID 
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get("id");
+
+      if (!productId) {
+        alert("No product selected for update.");
+        window.location.href = "/Website/Products/view_products.html"; // Redirect -> no ID
+        return;
+      }
+
       let products = JSON.parse(localStorage.getItem("products")) || [];
-  
-      let totalPurchases = 0;
-      let totalOrders = purchases.length;
-      let purchaseTableBody = document.getElementById("purchase-table-body");
-      purchaseTableBody.innerHTML = "";
-  
-      let productPurchaseCount = {};
-      let dailyPurchases = {};
-  
-      purchases.forEach((purchase, index) => {
-          let product = products.find(p => p.id === purchase.productId);
-          let totalAmount = purchase.price;
-          totalPurchases += totalAmount;
-      
-          // Track most purchased product
-          if (!productPurchaseCount[purchase.productId]) {
-              productPurchaseCount[purchase.productId] = { name: purchase.product, quantity: 0 };
-          }
-          productPurchaseCount[purchase.productId].quantity += purchase.quantity;
-        
-          // Daily purchase data
-          dailyPurchases[purchase.date] = (dailyPurchases[purchase.date] || 0) + purchase.quantity;
-        
-          let row = purchaseTableBody.insertRow();
-          row.innerHTML = `
-              <td>${index + 1}</td>
-              <td>${purchase.product}</td>
-              <td>${purchase.quantity}</td>
-              <td>${purchase.date}</td>
-              <td>₹${totalAmount.toLocaleString()}</td>
-          `;
+      let product = products.find(p => p.id === productId);
+
+      if (!product) {
+        alert("Product not found.");
+        window.location.href = "/Website/Products/view_products.html";
+        return;
+      }
+
+      // form fill up by its own
+      document.getElementById("product-id").value = product.id;
+      document.getElementById("product-name").value = product.name;
+      document.getElementById("category").value = product.category;
+      document.getElementById("price").value = product.price;
+      document.getElementById("quantity").value = product.quantity;
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Get updated values
+        const updatedName = document.getElementById("product-name").value || product.name;
+        const updatedCategory = document.getElementById("category").value || product.category;
+        const updatedPrice = document.getElementById("price").value || product.price;
+        const updatedQuantity = document.getElementById("quantity").value || product.quantity;
+
+        // Update product details
+        product.name = updatedName;
+        product.category = updatedCategory;
+        product.price = updatedPrice;
+        product.quantity = updatedQuantity;
+
+        // Save in localstorage
+        localStorage.setItem("products", JSON.stringify(products));
+
+        alert("Product updated successfully!");
+        window.location.href = "/Website/Products/view_products.html";
       });
-    
-      // Find the most purchased product
-      let topProduct = Object.values(productPurchaseCount).reduce((best, product) => 
-          product.quantity > (best.quantity || 0) ? product : best, {});
-      document.getElementById("top-product").textContent = topProduct.name || "N/A";
-    
-      // Update summary
-      document.getElementById("total-purchases").textContent = `₹${totalPurchases.toLocaleString()}`;
-      document.getElementById("total-orders").textContent = totalOrders;
-    
-      // Update purchase chart
-      updatePurchaseChart(dailyPurchases);
-  }
-  
-  function updatePurchaseChart(dailyPurchases) {
-      let ctx = document.getElementById("purchaseChart").getContext("2d");
-  
-      new Chart(ctx, {
-          type: "line",
-          data: {
-              labels: Object.keys(dailyPurchases),
-              datasets: [{
-                  label: "Purchase Trend",
-                  data: Object.values(dailyPurchases),
-                  borderColor: "#4CAF50",
-                  backgroundColor: "rgba(76, 175, 80, 0.2)",
-                  borderWidth: 2,
-                  pointBackgroundColor: "#4CAF50",
-                  pointBorderColor: "#4CAF50",
-                  pointRadius: 4,
-                  fill: false,
-                  tension: 0.3
-              }]
-          },
-          options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                  x: {
-                      title: { display: true, text: "Date" }
-                  },
-                  y: {
-                      title: { display: true, text: "Units Purchased" },
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
-  }
-</script>
+    });
+  </script>
 </body>
 </html>

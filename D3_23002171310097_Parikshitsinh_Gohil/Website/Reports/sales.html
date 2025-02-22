@@ -3,73 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purchase Management</title>
+    <title>Add Sales</title>
     <link rel="stylesheet" href="/Website/style.css">
     <script type="text/javascript" src="/Website/app.js" defer></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        .add-sales-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        .purchase-container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background: var(--base-clr);
+
+        .add-sales-form {
+            background-color: var(--base-clr);
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
+            width: 100%;
+            max-width: 600px;
             text-align: center;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+
+        .add-sales-form h2 {
+            font-size: 1.8rem;
+            color: var(--text-clr);
+            margin-bottom: 20px;
         }
-        input, select {
-            padding: 10px;
-            font-size: 1rem;
+
+        .add-sales-form label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-clr);
+            text-align: left;
+        }
+
+        .add-sales-form select,
+        .add-sales-form input {
+            width: 100%;
+            padding: 12px;
             border: 1px solid var(--line-clr);
             border-radius: 5px;
+            font-size: 1rem;
+            color: var(--text-clr);
+            margin-bottom: 15px;
+            background-color: #fff;
+            box-sizing: border-box;
         }
-        button {
-            padding: 12px;
+
+        .add-sales-form button {
             background-color: var(--accent-clr);
-            color: white;
-            font-size: 1.1rem;
+            color: #fff;
             border: none;
             cursor: pointer;
+            padding: 12px 20px;
+            font-size: 1.2rem;
             border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: var(--hover-clr);
-        }
-        .purchase-table {
-            margin-top: 20px;
-            overflow-x: auto;
-        }
-        table {
+            transition: background-color 0.3s ease;
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
         }
-        th, td {
-            padding: 10px;
-            border: 1px solid var(--line-clr);
-            text-align: center;
-        }
-        th {
-            background-color: var(--accent-clr);
-            color: white;
-        }
-        tr:hover td {
+
+        .add-sales-form button:hover {
             background-color: var(--hover-clr);
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-
     <nav id="sidebar">
         <ul>
           <li>
@@ -120,8 +125,8 @@
             </button>
             <ul class="sub-menu">
               <div>
-                  <li ><a href="/Website/Reports/sales.html">Add Sales</a></li>
-                  <li class="active"><a href="/Website/Reports/purchase.html">Add Purchase</a></li>
+                  <li class="active"><a href="/Website/Reports/sales.html">Add Sales</a></li>
+                  <li><a href="/Website/Reports/purchase.html">Add Purchase</a></li>
                 <li><a href="/Website/Reports/sales_report.html">Sales Report</a></li>
                 <li ><a href="/Website/Reports/purchase_report.html">Purchase Report</a></li>
               </div>
@@ -136,136 +141,121 @@
           </li>
         </ul>
       </nav>
-    <main>
-        <section class="purchase-container">
-            <h2>Manage Purchases</h2>
+    <main class="add-sales-container">
+        <section class="add-sales-form">
+            <h2>Add Sales</h2>
+            <p>Enter details of the sale transaction.</p>
 
-            <form id="purchase-form">
-                <label for="product">Select Product:</label>
-                <select id="product" required></select>
+            <form id="add-sales-form">
+                <label for="product">Select Product</label>
+                <select id="product" required>
+                    <option value="">-- Select a Product --</option>
+                </select>
 
-                <label for="supplier">Select Supplier:</label>
-                <select id="supplier" required></select>
-
-                <label for="quantity">Quantity:</label>
+                <label for="quantity">Quantity Sold</label>
                 <input type="number" id="quantity" min="1" required>
 
-                <label for="price">Total Price (₹):</label>
-                <input type="number" id="price" min="1" required>
+                <label for="sale-date">Sale Date</label>
+                <input type="date" id="sale-date" required>
 
-                <label for="purchase-date">Purchase Date:</label>
-                <input type="date" id="purchase-date" required>
+                <p id="error-message" class="error-message"></p>
 
-                <button type="submit">Add Purchase</button>
+                <button type="submit">Add Sale</button>
             </form>
-        </section>
-
-        <!-- All purchase data table -->
-        <section class="purchase-container">
-            <h2>Purchase History</h2>
-            <div class="purchase-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price (₹)</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="purchase-table-body"></tbody>
-                </table>
-            </div>
         </section>
     </main>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            loadProducts();
-            loadSuppliers();
-            displayPurchaseHistory();
+        document.addEventListener("DOMContentLoaded", function () {
+            loadProductDropdown();
         });
 
-        function loadProducts() {
+        // available product -> add in dropdown
+        function loadProductDropdown() {
+            const productSelect = document.getElementById("product");
             let products = JSON.parse(localStorage.getItem("products")) || [];
-            let productDropdown = document.getElementById("product");
-            productDropdown.innerHTML = "<option value='' disabled selected>Select Product</option>";
 
+            productSelect.innerHTML = '<option value="">-- Select a Product --</option>'; // Reset dropdown
             products.forEach(product => {
                 let option = document.createElement("option");
                 option.value = product.id;
-                option.textContent = `${product.name} (Stock: ${product.quantity})`;
-                productDropdown.appendChild(option);
+                option.textContent = `${product.name} (Available: ${product.quantity})`;
+                productSelect.appendChild(option);
             });
         }
 
-        function loadSuppliers() {
-            let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
-            let supplierDropdown = document.getElementById("supplier");
-            supplierDropdown.innerHTML = "<option value='' disabled selected>Select Supplier</option>";
-
-            suppliers.forEach(supplier => {
-                let option = document.createElement("option");
-                option.value = supplier.id;
-                option.textContent = supplier.name;
-                supplierDropdown.appendChild(option);
-            });
-        }
-
-        document.getElementById("purchase-form").addEventListener("submit", function(event) {
+        document.getElementById("add-sales-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
-            let productId = document.getElementById("product").value;
-            let supplierId = document.getElementById("supplier").value;
-            let quantity = parseInt(document.getElementById("quantity").value);
-            let price = parseFloat(document.getElementById("price").value);
-            let date = document.getElementById("purchase-date").value;
-
-            if (!productId || !supplierId || quantity <= 0 || price <= 0 || !date) {
-                alert("Please fill in all fields correctly!");
-                return;
-            }
+            const productId = document.getElementById("product").value;
+            const quantitySold = parseInt(document.getElementById("quantity").value);
+            const saleDate = document.getElementById("sale-date").value;
+            const errorMsg = document.getElementById("error-message");
 
             let products = JSON.parse(localStorage.getItem("products")) || [];
-            let product = products.find(p => p.id === productId);
+            let sales = JSON.parse(localStorage.getItem("sales")) || [];
 
-            if (!product) {
-                alert("Error: Selected product not found!");
+            let selectedProduct = products.find(p => p.id === productId);
+
+            if (!selectedProduct) {
+                errorMsg.textContent = "Error: Selected product does not exist";
                 return;
             }
 
-            // Update -> product quantity
-            product.quantity += quantity;
+            if (quantitySold > selectedProduct.quantity) {
+                errorMsg.textContent = `Error: Only ${selectedProduct.quantity} units available.`;
+                return;
+            }
+
+            if (!saleDate) {
+                errorMsg.textContent = "Error: Please enter a valid sale date.";
+                return;
+            }
+
+            // add sales
+            const saleEntry = {
+                productId: selectedProduct.id,
+                productName: selectedProduct.name,
+                quantitySold: quantitySold,
+                saleDate: saleDate
+            };
+
+            sales.push(saleEntry);
+            localStorage.setItem("sales", JSON.stringify(sales));
+
+            // inventory updated
+            selectedProduct.quantity -= quantitySold;
             localStorage.setItem("products", JSON.stringify(products));
 
-            // Save purchase 
-            let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
-            purchases.push({ product: product.name, supplier: supplierId, quantity, price, date });
-            localStorage.setItem("purchases", JSON.stringify(purchases));
+            alert("Sale recorded successfully!");
 
-            alert("Purchase recorded successfully!");
-            displayPurchaseHistory();
-            loadProducts();
-            document.getElementById("purchase-form").reset();
+            // report updated
+            updateSalesReport();
+
+            // form reset
+            document.getElementById("add-sales-form").reset();
+            loadProductDropdown();
         });
 
-        function displayPurchaseHistory() {
-            let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
-            let tableBody = document.getElementById("purchase-table-body");
-            tableBody.innerHTML = "";
+        //update sales report function
+        function updateSalesReport() {
+            let sales = JSON.parse(localStorage.getItem("sales")) || [];
+            let salesTableBody = window.opener?.document.getElementById("sales-table-body");
 
-            purchases.forEach(purchase => {
-                let row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${purchase.product}</td>
-                    <td>${purchase.quantity}</td>
-                    <td>₹${purchase.price.toLocaleString()}</td>
-                    <td>${purchase.date}</td>
-                `;
-            });
+            if (salesTableBody) {
+                salesTableBody.innerHTML = "";
+
+                sales.forEach((sale, index) => {
+                    let row = salesTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${sale.productName}</td>
+                        <td>${sale.quantitySold}</td>
+                        <td>${sale.saleDate}</td>
+                    `;
+                });
+            }
         }
-        console.log('Supplier Data:', supplier);
-
     </script>
 
 </body>
