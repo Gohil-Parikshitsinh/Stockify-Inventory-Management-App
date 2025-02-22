@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/Website/style.css">
     <script type="text/javascript" src="/Website/app.js" defer></script>
     <style>
-        /* Centered Add Sales Form */
         .add-sales-container {
             display: flex;
             justify-content: center;
@@ -143,7 +142,6 @@
         </ul>
       </nav>
     <main class="add-sales-container">
-        <!-- Centered Sales Form -->
         <section class="add-sales-form">
             <h2>Add Sales</h2>
             <p>Enter details of the sale transaction.</p>
@@ -172,7 +170,7 @@
             loadProductDropdown();
         });
 
-        // ✅ Load available products into the dropdown
+        // available product -> add in dropdown
         function loadProductDropdown() {
             const productSelect = document.getElementById("product");
             let products = JSON.parse(localStorage.getItem("products")) || [];
@@ -186,14 +184,13 @@
             });
         }
 
-        // ✅ Handle form submission
         document.getElementById("add-sales-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             const productId = document.getElementById("product").value;
             const quantitySold = parseInt(document.getElementById("quantity").value);
             const saleDate = document.getElementById("sale-date").value;
-            const errorMessage = document.getElementById("error-message");
+            const errorMsg = document.getElementById("error-message");
 
             let products = JSON.parse(localStorage.getItem("products")) || [];
             let sales = JSON.parse(localStorage.getItem("sales")) || [];
@@ -201,21 +198,21 @@
             let selectedProduct = products.find(p => p.id === productId);
 
             if (!selectedProduct) {
-                errorMessage.textContent = "Error: Selected product does not exist.";
+                errorMsg.textContent = "Error: Selected product does not exist";
                 return;
             }
 
             if (quantitySold > selectedProduct.quantity) {
-                errorMessage.textContent = `Error: Only ${selectedProduct.quantity} units available.`;
+                errorMsg.textContent = `Error: Only ${selectedProduct.quantity} units available.`;
                 return;
             }
 
             if (!saleDate) {
-                errorMessage.textContent = "Error: Please enter a valid sale date.";
+                errorMsg.textContent = "Error: Please enter a valid sale date.";
                 return;
             }
 
-            // ✅ Record Sale Data
+            // add sales
             const saleEntry = {
                 productId: selectedProduct.id,
                 productName: selectedProduct.name,
@@ -226,27 +223,27 @@
             sales.push(saleEntry);
             localStorage.setItem("sales", JSON.stringify(sales));
 
-            // ✅ Update Inventory
+            // inventory updated
             selectedProduct.quantity -= quantitySold;
             localStorage.setItem("products", JSON.stringify(products));
 
             alert("Sale recorded successfully!");
 
-            // ✅ Update Sales Report
+            // report updated
             updateSalesReport();
 
-            // Reset form
+            // form reset
             document.getElementById("add-sales-form").reset();
             loadProductDropdown();
         });
 
-        // ✅ Update Sales Report (Live Data)
+        //update sales report function
         function updateSalesReport() {
             let sales = JSON.parse(localStorage.getItem("sales")) || [];
             let salesTableBody = window.opener?.document.getElementById("sales-table-body");
 
             if (salesTableBody) {
-                salesTableBody.innerHTML = ""; // Clear previous sales
+                salesTableBody.innerHTML = "";
 
                 sales.forEach((sale, index) => {
                     let row = salesTableBody.insertRow();

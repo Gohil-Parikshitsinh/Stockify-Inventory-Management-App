@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="/Website/style.css">
   <script type="text/javascript" src="/Website/app.js" defer></script>
   <style>
-      /* Supplier Table Section */
       .supplier-table {
         margin-top: 20px;
         padding: 20px;
@@ -63,7 +62,6 @@
         margin: 5px 0 10px 0;
       }
 
-      /* Responsiveness */
       @media screen and (max-width: 768px) {
         table th, table td {
           padding: 10px;
@@ -174,6 +172,7 @@
   </main>
 
   <script>
+    // preset data
     function loadPresetSuppliers() {
       let suppliers = JSON.parse(localStorage.getItem("suppliers"));
 

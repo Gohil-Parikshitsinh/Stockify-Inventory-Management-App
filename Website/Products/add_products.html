@@ -42,7 +42,7 @@
         color: var(--text-clr);
         margin-bottom: 15px;
         background-color: #fff;
-        box-sizing: border-box; /* Ensures padding is included in width */
+        box-sizing: border-box;
       }
 
       .add-product-form textarea {
@@ -55,7 +55,6 @@
         cursor: not-allowed;
       }
 
-      /* Styling for the Add Product Button */
       .add-product-form input[type="submit"] {
         background-color: var(--accent-clr);
         color: #fff;
@@ -66,28 +65,22 @@
         border-radius: 5px;
         width: auto;
         margin-top: 20px;
-        display: block; /* Makes button display as block for centering */
+        display: block;
         margin-left: auto;
         margin-right: auto;
         transition: background-color 0.3s ease;
       }
 
       .add-product-form input[type="submit"]:hover {
-        background-color: var(--hover-clr); /* Hover effect */
+        background-color: var(--hover-clr);
       }
 
-      /* Input Focus Effect */
       .add-product-form input:focus,
       .add-product-form select:focus,
       .add-product-form textarea:focus {
         border-color: var(--accent-clr);
         outline: none;
-        box-shadow: 0 0 5px rgba(200, 173, 127, 0.5); /* Accent color glow effect */
-      }
-
-      /* Form Button Wrapper */
-      .form-button-wrapper {
-        text-align: center;
+        box-shadow: 0 0 5px rgba(200, 173, 127, 0.5);
       }
 
       .add-product-form button {
@@ -106,7 +99,6 @@
         background-color: var(--line-clr);
       }
 
-      /* Responsive Design for smaller screens */
       @media screen and (max-width: 768px) {
         .add-product-form {
           padding: 20px;
@@ -317,7 +309,7 @@
         <p>Use this form to add a new product to the inventory.</p>
       </section>
 
-      <!-- Add Product Form -->
+      <!-- ***** Add Product ***** -->
       <section class="add-product-form">
         <form id="add-product-form">
           <label for="product-id">Product ID</label>
@@ -345,7 +337,7 @@
         document.getElementById("product-id").value = generateProductID();
       });
 
-      // Function to generate a random alphanumeric product ID
+      // generate random product ID
       function generateProductID() {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let productId = "";
@@ -357,7 +349,7 @@
         return productId;
       }
 
-      // Handle form submission
+      // form submission
       document
         .getElementById("add-product-form")
         .addEventListener("submit", function (event) {
@@ -377,14 +369,14 @@
             quantity: parseInt(quantity),
           };
 
-          // Store product data in local storage
+          // Storeage in local storage
           let products = JSON.parse(localStorage.getItem("products")) || [];
           products.push(newProduct);
           localStorage.setItem("products", JSON.stringify(products));
 
           alert("Product added successfully!");
 
-          // Reset form and generate a new Product ID
+          // Reset -> form , generate -> new Product ID
           document.getElementById("add-product-form").reset();
           document.getElementById("product-id").value = generateProductID();
         });

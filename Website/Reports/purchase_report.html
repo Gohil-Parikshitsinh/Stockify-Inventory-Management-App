@@ -143,7 +143,7 @@
     <section class="purchase-report">
         <h2>Purchase Report</h2>
 
-        <!-- Summary -->
+        <!-- ***** Summary ***** -->
         <div class="summary-card">
             <div class="card">
                 <h3>Total Purchases</h3>
@@ -159,13 +159,13 @@
             </div>
         </div>
 
-        <!-- Purchase Line Chart -->
+        <!-- ***** Purchase Line Chart ***** -->
         <h3>Purchase Trends</h3>
         <div class="chart-container">
             <canvas id="purchaseChart"></canvas>
         </div>
 
-        <!-- Purchase Table -->
+        <!-- ***** Purchase Table ***** -->
         <h3>Purchase Transactions</h3>
         <table>
             <thead>
@@ -173,7 +173,6 @@
                     <th>#</th>
                     <th>Product</th>
                     <th>Quantity</th>
-                    <th>Supplier</th>
                     <th>Date</th>
                     <th>Total Cost</th>
                 </tr>
@@ -182,97 +181,95 @@
         </table>
     </section>
 </main>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        updatePurchaseReport();
-    });
-
-    function updatePurchaseReport() {
-        let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
-        let products = JSON.parse(localStorage.getItem("products")) || [];
-
-        let totalPurchases = 0;
-        let totalOrders = purchases.length;
-        let purchaseTableBody = document.getElementById("purchase-table-body");
-        purchaseTableBody.innerHTML = "";
-
-        let productPurchaseCount = {};
-        let dailyPurchases = {};
-
-        purchases.forEach((purchase, index) => {
-            let product = products.find(p => p.id === purchase.productId);
-            let totalAmount = purchase.price;
-            totalPurchases += totalAmount;
-
-            // Track most purchased product
-            if (!productPurchaseCount[purchase.productId]) {
-                productPurchaseCount[purchase.productId] = { name: purchase.product, quantity: 0 };
-            }
-            productPurchaseCount[purchase.productId].quantity += purchase.quantity;
-
-            // Store daily purchase data
-            dailyPurchases[purchase.date] = (dailyPurchases[purchase.date] || 0) + purchase.quantity;
-
-            let row = purchaseTableBody.insertRow();
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${purchase.product}</td>
-                <td>${purchase.quantity}</td>
-                <td>${purchase.supplier}</td>
-                <td>${purchase.date}</td>
-                <td>₹${totalAmount.toLocaleString()}</td>
-            `;
-        });
-
-        // Find the most purchased product
-        let topProduct = Object.values(productPurchaseCount).reduce((best, product) => 
-            product.quantity > (best.quantity || 0) ? product : best, {});
-        document.getElementById("top-product").textContent = topProduct.name || "N/A";
-
-        // Update Summary
-        document.getElementById("total-purchases").textContent = `₹${totalPurchases.toLocaleString()}`;
-        document.getElementById("total-orders").textContent = totalOrders;
-
-        // Update Purchase Chart
-        updatePurchaseChart(dailyPurchases);
-    }
-
-    function updatePurchaseChart(dailyPurchases) {
-        let ctx = document.getElementById("purchaseChart").getContext("2d");
-
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: Object.keys(dailyPurchases),
-                datasets: [{
-                    label: "Purchase Trend",
-                    data: Object.values(dailyPurchases),
-                    borderColor: "#4CAF50",
-                    backgroundColor: "rgba(76, 175, 80, 0.2)",
-                    borderWidth: 2,
-                    pointBackgroundColor: "#4CAF50",
-                    pointBorderColor: "#4CAF50",
-                    pointRadius: 4,
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: { display: true, text: "Date" }
-                    },
-                    y: {
-                        title: { display: true, text: "Units Purchased" },
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
+  document.addEventListener("DOMContentLoaded", function () {
+    updatePurchaseReport();
+  });
+  
+  function updatePurchaseReport() {
+      let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+  
+      let totalPurchases = 0;
+      let totalOrders = purchases.length;
+      let purchaseTableBody = document.getElementById("purchase-table-body");
+      purchaseTableBody.innerHTML = "";
+  
+      let productPurchaseCount = {};
+      let dailyPurchases = {};
+  
+      purchases.forEach((purchase, index) => {
+          let product = products.find(p => p.id === purchase.productId);
+          let totalAmount = purchase.price;
+          totalPurchases += totalAmount;
+      
+          // Track most purchased product
+          if (!productPurchaseCount[purchase.productId]) {
+              productPurchaseCount[purchase.productId] = { name: purchase.product, quantity: 0 };
+          }
+          productPurchaseCount[purchase.productId].quantity += purchase.quantity;
+        
+          // Daily purchase data
+          dailyPurchases[purchase.date] = (dailyPurchases[purchase.date] || 0) + purchase.quantity;
+        
+          let row = purchaseTableBody.insertRow();
+          row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${purchase.product}</td>
+              <td>${purchase.quantity}</td>
+              <td>${purchase.date}</td>
+              <td>₹${totalAmount.toLocaleString()}</td>
+          `;
+      });
+    
+      // Find the most purchased product
+      let topProduct = Object.values(productPurchaseCount).reduce((best, product) => 
+          product.quantity > (best.quantity || 0) ? product : best, {});
+      document.getElementById("top-product").textContent = topProduct.name || "N/A";
+    
+      // Update summary
+      document.getElementById("total-purchases").textContent = `₹${totalPurchases.toLocaleString()}`;
+      document.getElementById("total-orders").textContent = totalOrders;
+    
+      // Update purchase chart
+      updatePurchaseChart(dailyPurchases);
+  }
+  
+  function updatePurchaseChart(dailyPurchases) {
+      let ctx = document.getElementById("purchaseChart").getContext("2d");
+  
+      new Chart(ctx, {
+          type: "line",
+          data: {
+              labels: Object.keys(dailyPurchases),
+              datasets: [{
+                  label: "Purchase Trend",
+                  data: Object.values(dailyPurchases),
+                  borderColor: "#4CAF50",
+                  backgroundColor: "rgba(76, 175, 80, 0.2)",
+                  borderWidth: 2,
+                  pointBackgroundColor: "#4CAF50",
+                  pointBorderColor: "#4CAF50",
+                  pointRadius: 4,
+                  fill: false,
+                  tension: 0.3
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                  x: {
+                      title: { display: true, text: "Date" }
+                  },
+                  y: {
+                      title: { display: true, text: "Units Purchased" },
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  }
 </script>
 </body>
 </html>

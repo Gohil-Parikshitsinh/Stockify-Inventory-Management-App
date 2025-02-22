@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/Website/style.css" />
     <script type="text/javascript" src="/Website/app.js" defer></script>
     <style>
-      /* Product Table Section */
       .product-table {
         margin-top: 20px;
         padding: 20px;
@@ -17,18 +16,19 @@
       }
 
       table {
-  border-collapse: collapse; /* Ensures borders between cells don't overlap */
-  width: 100%;
-  border-radius: 10px; /* Rounds the corners of the table */
-  overflow: hidden; /* Ensures the table content doesn't spill out of the rounded corners */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        border-collapse: collapse; /* Ensures borders between cells don't overlap */
+        width: 100%;
+        border-radius: 10px; /* Rounds the corners of the table */
+        overflow: hidden; /* Ensures the table content doesn't spill out of the rounded corners */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-th, td {
-  padding: 10px;
-  border: 1px solid var(--line-clr);
-  text-align: left;
-}
+      th, td {
+        padding: 10px;
+        border: 1px solid var(--line-clr);
+        text-align: left;
+      }
+
       table th {
         background-color: var(--accent-clr);
         color: #fff;
@@ -62,7 +62,6 @@ th, td {
         margin: 5px 0 10px 0;
       }
 
-      /* Responsiveness */
       @media screen and (max-width: 768px) {
         table th,
         table td {
@@ -287,7 +286,7 @@ th, td {
     function loadPresetProducts() {
       let products = JSON.parse(localStorage.getItem("products"));
   
-      // ✅ Only add preset data if products do not exist in localStorage OR are empty
+      // preset data -> (only when empty)
       if (!products || products.length === 0) {
         products = [
           { id: "P001A3", name: "Laptop", category: "Electronics", price: "75,000", quantity: 10 },
@@ -296,12 +295,11 @@ th, td {
           { id: "X29Y57", name: "Monitor 24-inch", category: "Electronics", price: "12,500", quantity: 15 },
           { id: "M40N81", name: "Wireless Keyboard", category: "Accessories", price: "1,800", quantity: 40 }
         ];
-        localStorage.setItem("products", JSON.stringify(products)); // ✅ Set only once
+        localStorage.setItem("products", JSON.stringify(products));
       }
     }
   
     function displayProducts() {
-      // ✅ Call `loadPresetProducts()` only once during page load
       if (!localStorage.getItem("products")) {
         loadPresetProducts();
       }
@@ -309,7 +307,7 @@ th, td {
       let products = JSON.parse(localStorage.getItem("products")) || [];
       
       const tableBody = document.getElementById("product-table-body");
-      tableBody.innerHTML = ""; // ✅ Clear table before re-rendering to prevent duplicates
+      tableBody.innerHTML = "";
   
       products.forEach((product, index) => {
         let row = tableBody.insertRow();
@@ -332,16 +330,16 @@ th, td {
       products.splice(index, 1);
       localStorage.setItem("products", JSON.stringify(products));
   
-      displayProducts(); // Refresh table
+      displayProducts();
     }
   
     function updateProduct(productId) {
       window.location.href = `/Website/Products/update_products.html?id=${productId}`;
     }
   
-    // ✅ Ensure preset products load only **once** during page load
+    // preset products -> only once added
     document.addEventListener("DOMContentLoaded", () => {
-      loadPresetProducts(); // Load only if missing
+      loadPresetProducts();
       displayProducts();
     });
   </script>

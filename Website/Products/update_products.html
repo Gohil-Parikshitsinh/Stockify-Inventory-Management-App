@@ -132,7 +132,7 @@
       <p>Modify the product details as needed. The Product ID cannot be changed.</p>
     </section>
 
-    <!-- Update Product Form -->
+    <!-- Update Form -->
     <section class="update-product-form">
       <form id="update-product-form">
         <label for="product-id">Product ID</label>
@@ -159,13 +159,13 @@
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("update-product-form");
 
-      // Retrieve the product ID from URL params
+      // gets the ID 
       const urlParams = new URLSearchParams(window.location.search);
       const productId = urlParams.get("id");
 
       if (!productId) {
         alert("No product selected for update.");
-        window.location.href = "/Website/Products/view_products.html"; // Redirect if no ID
+        window.location.href = "/Website/Products/view_products.html"; // Redirect -> no ID
         return;
       }
 
@@ -178,7 +178,7 @@
         return;
       }
 
-      // Fill the form with existing product data
+      // form fill up by its own
       document.getElementById("product-id").value = product.id;
       document.getElementById("product-name").value = product.name;
       document.getElementById("category").value = product.category;
@@ -200,7 +200,7 @@
         product.price = updatedPrice;
         product.quantity = updatedQuantity;
 
-        // Save changes to localStorage
+        // Save in localstorage
         localStorage.setItem("products", JSON.stringify(products));
 
         alert("Product updated successfully!");

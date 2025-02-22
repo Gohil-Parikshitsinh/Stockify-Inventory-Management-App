@@ -160,11 +160,11 @@
             </div>
         </div>
 
-        <!-- Sales Line Chart -->
+        <!-- Sales Chart -->
         <h3>Sales Trends</h3>
-<div class="chart-container">
-    <canvas id="salesChart"></canvas>
-</div>
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
 
         <!-- Sales Table -->
         <h3>Sales Transactions</h3>
@@ -184,93 +184,94 @@
 </main>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    updateSalesReport();
-});
+  document.addEventListener("DOMContentLoaded", function () {
+      updateSalesReport();
+  });
 
-function updateSalesReport() {
-    let sales = JSON.parse(localStorage.getItem("sales")) || [];
-    let products = JSON.parse(localStorage.getItem("products")) || [];
+  function updateSalesReport() {
+      let sales = JSON.parse(localStorage.getItem("sales")) || [];
+      let products = JSON.parse(localStorage.getItem("products")) || [];
 
-    let totalSales = 0;
-    let totalOrders = sales.length;
-    let salesTableBody = document.getElementById("sales-table-body");
-    salesTableBody.innerHTML = "";
+      let totalSales = 0;
+      let totalOrders = sales.length;
+      let salesTableBody = document.getElementById("sales-table-body");
+      salesTableBody.innerHTML = "";
 
-    let productSalesCount = {};
-    let dailySales = {};
+      let productSalesCount = {};
+      let dailySales = {};
 
-    sales.forEach((sale, index) => {
-        let product = products.find(p => p.id === sale.productId);
-        let totalAmount = (product ? parseFloat(product.price.replace(/[^0-9]/g, "")) : 0) * sale.quantitySold;
-        totalSales += totalAmount;
+      sales.forEach((sale, index) => {
+          let product = products.find(p => p.id === sale.productId);
+          let totalAmount = (product ? parseFloat(product.price.replace(/[^0-9]/g, "")) : 0) * sale.  quantitySold;
+          totalSales += totalAmount;
 
-        // best-selling product
-        if (!productSalesCount[sale.productId]) {
-            productSalesCount[sale.productId] = { name: sale.productName, quantity: 0 };
-        }
-        productSalesCount[sale.productId].quantity += sale.quantitySold;
+          // best-selling product
+          if (!productSalesCount[sale.productId]) {
+              productSalesCount[sale.productId] = { name: sale.productName, quantity: 0 };
+          }
+          productSalesCount[sale.productId].quantity += sale.quantitySold;
 
-        // daily sales data
-        dailySales[sale.saleDate] = (dailySales[sale.saleDate] || 0) + sale.quantitySold;
+          // daily sales data
+          dailySales[sale.saleDate] = (dailySales[sale.saleDate] || 0) + sale.quantitySold;
 
-        let row = salesTableBody.insertRow();
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${sale.productName}</td>
-            <td>${sale.quantitySold}</td>
-            <td>${sale.saleDate}</td>
-            <td>₹${totalAmount.toLocaleString()}</td>
-        `;
-    });
+          let row = salesTableBody.insertRow();
+          row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${sale.productName}</td>
+              <td>${sale.quantitySold}</td>
+              <td>${sale.saleDate}</td>
+              <td>₹${totalAmount.toLocaleString()}</td>
+          `;
+      });
 
-    // Find best-selling product
-    let bestProduct = Object.values(productSalesCount).reduce((best, product) => 
-        product.quantity > (best.quantity || 0) ? product : best, {});
-    document.getElementById("best-product").textContent = bestProduct.name || "N/A";
+      // find best-selling product
+      let bestProduct = Object.values(productSalesCount).reduce((best, product) => 
+          product.quantity > (best.quantity || 0) ? product : best, {});
+      document.getElementById("best-product").textContent = bestProduct.name || "N/A";
 
-    // Update Summary
-    document.getElementById("total-sales").textContent = `₹${totalSales.toLocaleString()}`;
-    document.getElementById("total-orders").textContent = totalOrders;
+      // Update summary
+      document.getElementById("total-sales").textContent = `₹${totalSales.toLocaleString()}`;
+      document.getElementById("total-orders").textContent = totalOrders;
 
-    // Update Sales Chart
-    updateSalesChart(dailySales);
-}
-function updateSalesChart(dailySales) {
-    let ctx = document.getElementById("salesChart").getContext("2d");
+      // Update sales chart func call
+      updateSalesChart(dailySales);
+  }
+  
+  function updateSalesChart(dailySales) {
+      let ctx = document.getElementById("salesChart").getContext("2d");
 
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: Object.keys(dailySales),
-            datasets: [{
-                label: "Sales Trend",
-                data: Object.values(dailySales),
-                borderColor: "#c8ad7f",
-                backgroundColor: "rgba(200, 173, 127, 0.2)",
-                borderWidth: 2,
-                pointBackgroundColor: "#c8ad7f",
-                pointBorderColor: "#c8ad7f",
-                pointRadius: 4, /* 🔴 Smaller points */
-                fill: false,
-                tension: 0.3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: { display: true, text: "Date" }
-                },
-                y: {
-                    title: { display: true, text: "Units Sold" },
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
+      new Chart(ctx, {
+          type: "line",
+          data: {
+              labels: Object.keys(dailySales),
+              datasets: [{
+                  label: "Sales Trend",
+                  data: Object.values(dailySales),
+                  borderColor: "#c8ad7f",
+                  backgroundColor: "rgba(200, 173, 127, 0.2)",
+                  borderWidth: 2,
+                  pointBackgroundColor: "#c8ad7f",
+                  pointBorderColor: "#c8ad7f",
+                  pointRadius: 4,
+                  fill: false,
+                  tension: 0.3
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                  x: {
+                      title: { display: true, text: "Date" }
+                  },
+                  y: {
+                      title: { display: true, text: "Units Sold" },
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  }
 </script>
 </body>
 </html>

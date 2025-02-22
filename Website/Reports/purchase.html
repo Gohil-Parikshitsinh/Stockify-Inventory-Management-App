@@ -160,7 +160,7 @@
             </form>
         </section>
 
-        <!-- Purchase History Table -->
+        <!-- All purchase data table -->
         <section class="purchase-container">
             <h2>Purchase History</h2>
             <div class="purchase-table">
@@ -235,11 +235,11 @@
                 return;
             }
 
-            // Update product quantity
+            // Update -> product quantity
             product.quantity += quantity;
             localStorage.setItem("products", JSON.stringify(products));
 
-            // Save purchase data
+            // Save purchase 
             let purchases = JSON.parse(localStorage.getItem("purchases")) || [];
             purchases.push({ product: product.name, supplier: supplierId, quantity, price, date });
             localStorage.setItem("purchases", JSON.stringify(purchases));

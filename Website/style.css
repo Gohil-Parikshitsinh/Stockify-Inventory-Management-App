@@ -1,29 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-  --base-clr: #f5f5f5; /* Soft white-beige for background*/
-  --line-clr: #d6d2c4; /* Subtle beige-gray for lines and borders*/
-  --hover-clr: #e8e6dd; /* Light beige for hover effects*/
-  --text-clr: #2b2b2b; /* Rich black-gray for main text*/
-  --accent-clr: #c8ad7f; /* Warm beige-gold for accents like buttons*/
-  --secondary-text-clr: #6c6c6c; /* Muted dark gray for secondary text*/
+  --base-clr: #f5f5f5;
+  --line-clr: #d6d2c4; 
+  --hover-clr: #e8e6dd;
+  --text-clr: #2b2b2b; 
+  --accent-clr: #c8ad7f; 
+  --secondary-text-clr: #6c6c6c;
 } 
 
-
+/* 
 .primary-theme-variables{
-  /* Pure white for the background */
   --base-clr: #ffffff; 
-  /* Light gray for subtle lines and borders */
   --line-clr: #e0e0e0; 
-  /* Off-white for hover effects */
   --hover-clr: #f7f7f7;
-   /* Pure black for main text */
   --text-clr: #000000; 
-  /* Dark gray for accents and interactive elements */
   --accent-clr: #333333; 
-  /* Medium gray for secondary text */
   --secondary-text-clr: #666666; 
-}
+} */
 
 
 *{

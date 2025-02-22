@@ -11,23 +11,23 @@
       /* Dashboard Header */
       .dashboard-header {
         padding: 20px;
-        background-color: var(--base-clr); /* Soft white-beige for background */
+        background-color: var(--base-clr);
         text-align: center;
       }
 
       .dashboard-header h2 {
         font-size: 2rem;
-        color: var(--text-clr); /* Rich black-gray for main text */
+        color: var(--text-clr);
       }
 
       .dashboard-header p {
         font-size: 1rem;
         color: var(
           --secondary-text-clr
-        ); /* Muted dark gray for secondary text */
+        ); 
       }
 
-      /* Dashboard Stats Section (Minimalistic Cards) */
+      /* Dashboard Stats Section */
       .dashboard-stats {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -38,9 +38,9 @@
       .stat-card {
         background-color: var(
           --base-clr
-        ); /* Soft white-beige for card background */
+        );
         border-radius: 8px;
-        box-shadow: 0 4px 6px var(--line-clr); /* Subtle beige-gray for shadows */
+        box-shadow: 0 4px 6px var(--line-clr); 
         padding: 20px;
         text-align: center;
         transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -48,14 +48,14 @@
 
       .stat-card h3 {
         font-size: 1.2rem;
-        color: var(--accent-clr); /* Warm beige-gold for accent color */
+        color: var(--accent-clr); 
         margin-bottom: 10px;
       }
 
       .stat-card p {
         font-size: 1.5rem;
         font-weight: bold;
-        color: var(--text-clr); /* Rich black-gray for main text */
+        color: var(--text-clr); 
       }
 
       .stat-card:hover {
@@ -70,15 +70,15 @@
       .stat-card:hover p {
         color: var(
           --accent-clr
-        ); /* Change text color to accent color on hover */
+        ); 
       }
-      /* Dashboard Chart Section */
+
+      /* Chart Section */
       .dashboard-charts {
         margin-top: 30px;
         padding: 20px;
       }
 
-      /* Container for Both Charts */
       .chart-container {
         display: flex;
         justify-content: space-between;
@@ -86,13 +86,12 @@
         padding: 20px;
       }
 
-      /* Styling for each individual chart */
       #sales-chart,
       #purchase-chart {
-        width: 48%; /* Making each chart take up half the width */
+        width: 48%; 
         background-color: var(
           --line-clr
-        ); /* Light beige-gray for chart background */
+        ); 
         border-radius: 10px;
         padding: 10px;
       }
@@ -101,11 +100,10 @@
       #sales-chart h3,
       #purchase-chart h3 {
         font-size: 1.5rem;
-        color: var(--text-clr); /* Rich black-gray for titles */
+        color: var(--text-clr);
         text-align: center;
       }
 
-      /* Responsive Styling for Mobile */
       @media (max-width: 768px) {
         .chart-container {
           flex-direction: column;
@@ -114,11 +112,10 @@
 
         #sales-chart,
         #purchase-chart {
-          width: 100%; /* Full width on smaller screens */
+          width: 100%;
         }
       }
 
-      /* Recent Activity Section */
       .recent-activity {
         margin-top: 30px;
         padding: 20px;
@@ -126,7 +123,7 @@
 
       .recent-activity h3 {
         font-size: 1.5rem;
-        color: var(--text-clr); /* Rich black-gray for main text */
+        color: var(--text-clr);
       }
 
       .recent-activity ul {
@@ -135,39 +132,38 @@
       }
 
       .recent-activity ul li {
-        background-color: var(--hover-clr); /* Light beige for list items */
+        background-color: var(--hover-clr);
         padding: 10px;
         margin-bottom: 5px;
         border-radius: 5px;
         font-size: 1rem;
-        color: var(--text-clr); /* Rich black-gray for text */
+        color: var(--text-clr); 
         transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       .recent-activity ul li:hover {
-        background-color: var(--accent-clr); /* Warm beige-gold on hover */
-        color: var(--base-clr); /* Change text color to base color on hover */
+        background-color: var(--accent-clr); 
+        color: var(--base-clr);
       }
 
-      /* Button Hover Effects */
       button {
         background-color: var(
           --accent-clr
-        ); /* Warm beige-gold for button background */
+        ); 
         border: none;
         padding: 10px 20px;
-        color: var(--base-clr); /* White text color */
+        color: var(--base-clr); 
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.3s ease;
       }
 
       button:hover {
-        background-color: var(--hover-clr); /* Light beige for hover effect */
+        background-color: var(--hover-clr);
         transform: scale(1.05);
       }
 
-      /* Dropdown Hover Effects */
+      /* Dropdown */
       .dropdown-btn {
         background-color: transparent;
         border: none;
@@ -179,7 +175,7 @@
       }
 
       .dropdown-btn:hover {
-        background-color: var(--line-clr); /* Light beige for hover effect */
+        background-color: var(--line-clr);
         transform: translateX(10px);
       }
 
@@ -373,13 +369,13 @@
       </ul>
     </nav>
     <main>
-      <!-- Dashboard Header Section -->
+      <!-- ***** Header Section ***** -->
       <section class="dashboard-header">
         <h2>Dashboard</h2>
         <p>Welcome to your dashboard! Here are the key metrics.</p>
       </section>
 
-      <!-- Dashboard Stats Section (Widgets/Cards) -->
+      <!-- ***** Stats Section ***** -->
       <section class="dashboard-stats">
         <div class="stat-card">
           <h3>Total Sales</h3>
@@ -399,7 +395,7 @@
         </div>
       </section>
 
-      <!-- Dashboard Charts Section -->
+      <!-- Charts Section -->
       <section class="dashboard-charts">
         <div class="chart-container">
           <div id="sales-chart">
@@ -417,7 +413,7 @@
         </div>
       </section>
 
-      <!-- Recent Activity Section -->
+      <!-- -----------------Recent Activity--------------- -->
       <section class="recent-activity">
         <h3>Recent Activity</h3>
         <ul id="activity-list">
@@ -430,15 +426,13 @@
   </body>
 
   <script>
-    // Example to update the total sales dynamically
+    // update total sales
     document.getElementById("total-sales").innerText = "₹" + getTotalSales();
 
     function getTotalSales() {
-      // Here, you can fetch data from the server or use static values
       return 500000;
     }
 
-    // Similarly, you can use the same approach for other metrics like total purchase, active suppliers, etc.
   </script>
   <script>
     // Sales Chart
@@ -446,14 +440,14 @@
       .getElementById("sales-chart-canvas")
       .getContext("2d");
     var salesChart = new Chart(salesCtx, {
-      type: "line", // Line chart
+      type: "line",
       data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
         datasets: [
           {
             label: "Sales",
             data: [120000, 150000, 170000, 130000, 160000, 180000],
-            borderColor: "rgba(0, 123, 255, 0.5)", // Blue color for sales
+            borderColor: "rgba(0, 123, 255, 0.5)",
             fill: false,
           },
         ],
@@ -465,14 +459,14 @@
       .getElementById("purchase-chart-canvas")
       .getContext("2d");
     var purchaseChart = new Chart(purchaseCtx, {
-      type: "line", // Line chart
+      type: "line",
       data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
         datasets: [
           {
             label: "Purchase",
             data: [100000, 120000, 110000, 115000, 125000, 130000],
-            borderColor: "rgba(255, 99, 132, 0.5)", // Red color for purchase
+            borderColor: "rgba(255, 99, 132, 0.5)",
             fill: false,
           },
         ],
