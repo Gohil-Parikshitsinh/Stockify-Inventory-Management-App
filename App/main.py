@@ -4,6 +4,7 @@ from products import products_menu
 from purchases import purchase_menu
 from sales import sales_menu
 from suppliers import suppliers_menu
+from reports import reports_menu
 
 
 # Role-based menus
@@ -89,10 +90,6 @@ def call_feature_function(option):
         func()
     else:
         print("Feature not yet implemented.")
-
-
-def reports_menu():
-    print("Reports menu selected.")
 
 
 def invoice_menu():

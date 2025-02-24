@@ -1,6 +1,8 @@
-from data import purchases, products, suppliers
 import random
 import string
+from data import purchases, products, suppliers
+from invoices import generate_purchase_invoice
+
 
 # Generate unique purchase ID starting with "PR"
 def generate_purchase_id():
@@ -42,6 +44,8 @@ def add_purchase(product_id, quantity, supplier_id, date):
 
     # Update product stock
     products[product_id]["stock"] += quantity
+
+    generate_purchase_invoice(purchase_id, supplier_id, product_id, quantity)
 
     print(f"Purchase added successfully with ID: {purchase_id}. Stock updated.")
 

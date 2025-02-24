@@ -1,10 +1,3 @@
-# data.py
-
-# categories = {}  # Stores categories as {category_id: name}
-# products = {}    # Stores products as {product_id: {'name': name, 'category_id': category_id}}
-# purchases = {}  # Stores purchases as {purchase_id: {'product_id': ..., 'quantity': ..., 'price': ..., 'date': ...}}
-
-
 # Sample Categories (category_id: name)
 categories = {
     "C0000001": "Electronics",
@@ -34,11 +27,11 @@ purchases = {
 
 # Sample Sales (sale_id: {'product_id': product_id, 'quantity': quantity, 'customer': customer, 'date': date})
 sales = {
-    "S0000001": {"product_id": "P0000001", "quantity": 2, "customer": "John Doe", "date": "2025-02-23"},
-    "S0000002": {"product_id": "P0000003", "quantity": 5, "customer": "Jane Smith", "date": "2025-02-22"},
-    "S0000003": {"product_id": "P0000002", "quantity": 1, "customer": "Alice Johnson", "date": "2025-02-21"},
-    "S0000004": {"product_id": "P0000004", "quantity": 3, "customer": "Michael Brown", "date": "2025-02-20"},
-    "S0000005": {"product_id": "P0000005", "quantity": 10, "customer": "Emily Davis", "date": "2025-02-19"}
+    "SA000001": {"product_id": "P0000001", "quantity": 2, "customer": "John Doe", "date": "2025-02-23"},
+    "SA000002": {"product_id": "P0000003", "quantity": 5, "customer": "Jane Smith", "date": "2025-02-22"},
+    "SA000003": {"product_id": "P0000002", "quantity": 1, "customer": "Alice Johnson", "date": "2025-02-21"},
+    "SA000004": {"product_id": "P0000004", "quantity": 3, "customer": "Michael Brown", "date": "2025-02-20"},
+    "SA000005": {"product_id": "P0000005", "quantity": 10, "customer": "Emily Davis", "date": "2025-02-19"}
 }
 
 # Sample Suppliers (supplier_id: {'name': name, 'products_supplied': [product_ids]})

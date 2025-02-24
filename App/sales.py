@@ -5,7 +5,7 @@ from data import sales, products
 # Generate a unique random sale ID starting with 'S' and 7 random alphanumeric characters
 def generate_sale_id():
     while True:
-        sale_id = "S" + ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+        sale_id = "SA" + ''.join(random.choices(string.ascii_letters + string.digits, k=6))
         if sale_id not in sales:  # Ensure ID is unique
             return sale_id
 
@@ -14,36 +14,89 @@ def add_sale(product_id, quantity, customer, date):
     if product_id not in products:
         print(f"Product ID '{product_id}' does not exist. Cannot add sale.")
         return
+
+    try:
+        quantity = int(quantity)
+        if quantity <= 0:
+            print("Quantity must be a positive integer.")
+            return
+    except ValueError:
+        print("Invalid quantity. Please enter a valid number.")
+        return
+
+    if products[product_id]["stock"] < quantity:
+        print(f"Insufficient stock for Product ID '{product_id}'. Available stock: {products[product_id]['stock']}")
+        return
+
     sale_id = generate_sale_id()
     sales[sale_id] = {"product_id": product_id, "quantity": quantity, "customer": customer, "date": date}
-    print(f"Sale added successfully with ID: {sale_id}.")
+
+    # Deduct stock
+    products[product_id]["stock"] -= quantity
+
+    print(f"Sale added successfully with ID: {sale_id}. Stock updated.")
 
 # View all sales
 def view_sales():
     if sales:
         print("\nSales:")
         for sale_id, details in sales.items():
-            print(f"ID: {sale_id}, Product ID: {details['product_id']}, Quantity: {details['quantity']}, Customer: {details['customer']}, Date: {details['date']}")
+            product_name = products[details['product_id']]['name']
+            print(f"ID: {sale_id}, Product: {product_name}, Quantity: {details['quantity']}, Customer: {details['customer']}, Date: {details['date']}")
     else:
         print("No sales available.")
 
 # Edit an existing sale
-def edit_sale(sale_id, product_id, quantity, customer, date):
+def edit_sale(sale_id, new_product_id, new_quantity, customer, date):
     if sale_id not in sales:
         print(f"Sale ID '{sale_id}' does not exist.")
-    elif product_id not in products:
-        print(f"Product ID '{product_id}' does not exist. Cannot update sale.")
-    else:
-        sales[sale_id] = {"product_id": product_id, "quantity": quantity, "customer": customer, "date": date}
-        print(f"Sale ID '{sale_id}' updated successfully.")
+        return
+
+    if new_product_id not in products:
+        print(f"Product ID '{new_product_id}' does not exist. Cannot update sale.")
+        return
+
+    try:
+        new_quantity = int(new_quantity)
+        if new_quantity <= 0:
+            print("Quantity must be a positive integer.")
+            return
+    except ValueError:
+        print("Invalid quantity. Please enter a valid number.")
+        return
+
+    old_product_id = sales[sale_id]['product_id']
+    old_quantity = sales[sale_id]['quantity']
+
+    # Adjust stock before updating the sale
+    products[old_product_id]['stock'] += old_quantity  # Restore old stock
+    if products[new_product_id]['stock'] < new_quantity:
+        print(f"Insufficient stock for Product ID '{new_product_id}'. Available stock: {products[new_product_id]['stock']}")
+        products[old_product_id]['stock'] -= old_quantity  # Revert stock change
+        return
+
+    products[new_product_id]['stock'] -= new_quantity  # Deduct new stock
+
+    # Update sale record
+    sales[sale_id] = {"product_id": new_product_id, "quantity": new_quantity, "customer": customer, "date": date}
+
+    print(f"Sale ID '{sale_id}' updated successfully. Stock updated.")
 
 # Delete a sale
 def delete_sale(sale_id):
     if sale_id not in sales:
         print(f"Sale ID '{sale_id}' does not exist.")
-    else:
-        del sales[sale_id]
-        print(f"Sale ID '{sale_id}' deleted successfully.")
+        return
+
+    product_id = sales[sale_id]["product_id"]
+    quantity = sales[sale_id]["quantity"]
+
+    # Restore stock
+    if product_id in products:
+        products[product_id]["stock"] += quantity
+
+    del sales[sale_id]
+    print(f"Sale ID '{sale_id}' deleted successfully. Stock restored.")
 
 # Sales menu
 def sales_menu():
@@ -61,17 +114,17 @@ def sales_menu():
             view_sales()
         elif choice == "2":
             product_id = input("Enter product ID: ")
-            quantity = int(input("Enter quantity: "))
+            quantity = input("Enter quantity: ")
             customer = input("Enter customer name: ")
             date = input("Enter date (YYYY-MM-DD): ")
             add_sale(product_id, quantity, customer, date)
         elif choice == "3":
             sale_id = input("Enter sale ID to update: ")
-            product_id = input("Enter new product ID: ")
-            quantity = int(input("Enter new quantity: "))
+            new_product_id = input("Enter new product ID: ")
+            new_quantity = input("Enter new quantity: ")
             customer = input("Enter new customer name: ")
             date = input("Enter new date (YYYY-MM-DD): ")
-            edit_sale(sale_id, product_id, quantity, customer, date)
+            edit_sale(sale_id, new_product_id, new_quantity, customer, date)
         elif choice == "4":
             sale_id = input("Enter sale ID to delete: ")
             delete_sale(sale_id)
