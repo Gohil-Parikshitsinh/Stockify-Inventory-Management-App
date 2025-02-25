@@ -5,68 +5,49 @@ from purchases import purchase_menu
 from sales import sales_menu
 from suppliers import suppliers_menu
 from reports import reports_menu
+from exceptions import AuthenticationError,InvalidRoleError, InvalidMenuChoiceError
 
-
-# Role-based menus
 role_menus = {
-    "Admin": [
-        "Products", "Suppliers", "Sales", "Purchase", "Reports", "Invoice", "Customers",
-        "Categories", "Stock Management", "Returns & Refunds", "Discounts & Promotions",
-        "Audit Logs", "Backup & Restore", "User Roles & Permissions", "Payment Tracking", "Dashboard"
-    ],
-    "Manager": [
-        "Products", "Suppliers", "Sales", "Purchase", "Reports", "Invoice", "Customers",
-        "Categories", "Stock Management", "Returns & Refunds", "Discounts & Promotions", "Payment Tracking", "Dashboard"
-    ],
-    "Sales Staff": [
-        "Sales", "Invoice", "Customers", "Returns & Refunds", "Discounts & Promotions", "Payment Tracking", "Dashboard"
-    ],
-    "Inventory Staff": [
-        "Products", "Suppliers", "Purchase", "Categories", "Stock Management", "Dashboard"
-    ]
+    "Admin": ["Products", "Suppliers", "Sales", "Purchase", "Reports", "Categories"],
+    "Manager": ["Products", "Suppliers", "Sales", "Purchase", "Reports", "Categories"],
+    "Sales Staff": ["Sales"],
+    "Inventory Staff": ["Products", "Suppliers", "Purchase", "Categories"]
 }
 
 
 def display_menu(role):
-    """Displays the role-specific menu and handles continuous navigation."""
-    options = role_menus.get(role, [])
+    options = role_menus.get(role)
+    if options is None:
+        raise InvalidRoleError(f"Invalid role: {role}")
 
-    while True:  # Keep showing the menu until user exits
+    while True:
         print(f"\n{role} Menu:")
         for index, option in enumerate(options, start=1):
             print(f"{index}. {option}")
         print(f"{len(options) + 1}. Logout")
 
         try:
-            choice = int(input("\nSelect an option by number: "))
-            if 1 <= choice <= len(options):
-                selected_option = options[choice - 1]
-                call_feature_function(selected_option)
-            elif choice == len(options) + 1:  # Logout option
-                print("Logging out...")
-                break  # Exit the loop, returning control to main()
-            else:
-                print("Invalid choice. Please select a valid option.")
+            handle_menu_selection(role, options)
+        except InvalidMenuChoiceError as e:
+            print(e)
         except ValueError:
-            print("Please enter a number.")
-
+            print("Please enter a valid number.")
 
 def handle_menu_selection(role, options):
-    """Handles user's menu selection."""
     try:
         choice = int(input("\nSelect an option by number: "))
         if 1 <= choice <= len(options):
             selected_option = options[choice - 1]
-            print(f"You selected: {selected_option}")
             call_feature_function(selected_option)
+        elif choice == len(options) + 1:  # Logout option
+            print("Logging out...")
+            exit()  # Exit the program
         else:
-            print("Invalid choice. Please select a valid option.")
+            raise InvalidMenuChoiceError("Invalid choice. Please select a valid option.")
     except ValueError:
-        print("Please enter a number.")
-
+        raise
 
 def call_feature_function(option):
-    """Calls the respective feature function based on user selection."""
     feature_functions = {
         "Products": products_menu,
         "Suppliers": suppliers_menu,
@@ -77,26 +58,33 @@ def call_feature_function(option):
     }
     func = feature_functions.get(option)
     if func:
-        func()
+        try:
+            func()
+        except Exception as e:
+            print(f"An error occurred while executing {option}: {e}")
     else:
         print("Feature not yet implemented.")
-
 
 def main():
     print("Welcome to Inventory Management System")
 
-    # User login
-    username = input("Enter username: ")
-    password = input("Enter password: ")
+    try:
+        # User login
+        username = input("Enter username: ")
+        password = input("Enter password: ")
 
-    # Authenticate user
-    user = authenticate_user(username, password)
-    if user:
+        # Authenticate user
+        user = authenticate_user(username, password)
+        if not user:
+            raise AuthenticationError("Invalid username or password.")
+
         print(f"Login successful! Welcome, {user.username} ({user.role}).")
         display_menu(user.role)
-    else:
-        print("Invalid username or password.")
 
+    except AuthenticationError as e:
+        print(e)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
     main()
