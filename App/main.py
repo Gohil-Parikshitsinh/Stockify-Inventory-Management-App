@@ -73,63 +73,13 @@ def call_feature_function(option):
         "Sales": sales_menu,
         "Purchase": purchase_menu,
         "Reports": reports_menu,
-        "Invoice": invoice_menu,
-        "Customers": customers_menu,
         "Categories": categories_menu,
-        "Stock Management": stock_management_menu,
-        "Returns & Refunds": returns_refunds_menu,
-        "Discounts & Promotions": discounts_promotions_menu,
-        "Audit Logs": audit_logs_menu,
-        "Backup & Restore": backup_restore_menu,
-        "User Roles & Permissions": user_roles_permissions_menu,
-        "Payment Tracking": payment_tracking_menu,
-        "Dashboard": dashboard_menu
     }
     func = feature_functions.get(option)
     if func:
         func()
     else:
         print("Feature not yet implemented.")
-
-
-def invoice_menu():
-    print("Invoice menu selected.")
-
-
-def customers_menu():
-    print("Customers menu selected.")
-
-
-def stock_management_menu():
-    print("Stock Management menu selected.")
-
-
-def returns_refunds_menu():
-    print("Returns & Refunds menu selected.")
-
-
-def discounts_promotions_menu():
-    print("Discounts & Promotions menu selected.")
-
-
-def audit_logs_menu():
-    print("Audit Logs menu selected.")
-
-
-def backup_restore_menu():
-    print("Backup & Restore menu selected.")
-
-
-def user_roles_permissions_menu():
-    print("User Roles & Permissions menu selected.")
-
-
-def payment_tracking_menu():
-    print("Payment Tracking menu selected.")
-
-
-def dashboard_menu():
-    print("Dashboard menu selected.")
 
 
 def main():

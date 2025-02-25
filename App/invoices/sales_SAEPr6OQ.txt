@@ -1,27 +1,25 @@
 =========================================
-                PURCHASE INVOICE
+                  SALE INVOICE
 =========================================
 
 Company Name: Stockify
-Address: Prahlad Nagar, Ahmedabad 
-Contact: +91 987654321 | Email: purchase@stockify.com
+Address: Ahmedabad
+Contact: +98 9876543210 | sales@stockify.com
 
 -----------------------------------------
-Invoice No: PINV-PReCeILV
-Date: 2025-02-24
+Invoice No: INV-SAEPr6OQ
+Date: 2025-03-02
 
-Supplier Name: TechWorld
-Supplier ID: S0000001
+Customer Name: gandhi
 -----------------------------------------
 
 Product ID  Product Name        Qty   Unit Price  Total Price 
 ---------------------------------------------------------------
-P0000001    Laptop              7     $1000.00     $7000.00     
+P0000001    Laptop              2     $1000.00     $2000.00     
 ---------------------------------------------------------------
-Subtotal:                               $7000.00
-Discount:                               $0.00
-Tax (10%):                              $700.00
+Subtotal:                               $2000.00
+Tax (10%):                              $200.00
 ---------------------------------------------------------------
-Total Amount:                           $7700.00
+Total Amount:                           $2200.00
 
 =========================================

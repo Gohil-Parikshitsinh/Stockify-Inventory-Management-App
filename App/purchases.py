@@ -1,7 +1,7 @@
 import random
 import string
 from data import purchases, products, suppliers
-from invoices import generate_purchase_invoice
+from invoices import generate_purchase_invoice, update_purchase_invoice, delete_purchase_invoice
 
 
 # Generate unique purchase ID starting with "PR"
@@ -109,7 +109,7 @@ def update_purchase(purchase_id, new_quantity, new_product_id=None):
 
     # Update the purchase record with the new quantity
     purchases[purchase_id]['quantity'] = new_quantity
-
+    update_purchase_invoice(purchase_id)
     print(
         f"Purchase ID '{purchase_id}' updated. Old Quantity: {old_quantity}, New Quantity: {new_quantity}. Stock updated.")
 
@@ -127,6 +127,7 @@ def delete_purchase(purchase_id):
         products[product_id]["stock"] -= quantity
 
     del purchases[purchase_id]
+    delete_purchase_invoice(purchase_id)
     print(f"Purchase ID '{purchase_id}' deleted. Stock updated.")
 
 def purchase_menu():

@@ -1,6 +1,8 @@
 import random
 import string
 from data import sales, products
+from invoices import generate_sale_invoice, update_sale_invoice, delete_sale_invoice
+
 
 # Generate a unique random sale ID starting with 'S' and 7 random alphanumeric characters
 def generate_sale_id():
@@ -34,6 +36,8 @@ def add_sale(product_id, quantity, customer, date):
     # Deduct stock
     products[product_id]["stock"] -= quantity
 
+    generate_sale_invoice(sale_id, product_id, quantity, customer, date)
+
     print(f"Sale added successfully with ID: {sale_id}. Stock updated.")
 
 # View all sales
@@ -47,7 +51,7 @@ def view_sales():
         print("No sales available.")
 
 # Edit an existing sale
-def edit_sale(sale_id, new_product_id, new_quantity, customer, date):
+def update_sale(sale_id, new_product_id, new_quantity, customer, date):
     if sale_id not in sales:
         print(f"Sale ID '{sale_id}' does not exist.")
         return
@@ -80,6 +84,8 @@ def edit_sale(sale_id, new_product_id, new_quantity, customer, date):
     # Update sale record
     sales[sale_id] = {"product_id": new_product_id, "quantity": new_quantity, "customer": customer, "date": date}
 
+    update_sale_invoice(sale_id)
+
     print(f"Sale ID '{sale_id}' updated successfully. Stock updated.")
 
 # Delete a sale
@@ -96,6 +102,7 @@ def delete_sale(sale_id):
         products[product_id]["stock"] += quantity
 
     del sales[sale_id]
+    delete_sale_invoice(sale_id)
     print(f"Sale ID '{sale_id}' deleted successfully. Stock restored.")
 
 # Sales menu
@@ -124,7 +131,7 @@ def sales_menu():
             new_quantity = input("Enter new quantity: ")
             customer = input("Enter new customer name: ")
             date = input("Enter new date (YYYY-MM-DD): ")
-            edit_sale(sale_id, new_product_id, new_quantity, customer, date)
+            update_sale(sale_id, new_product_id, new_quantity, customer, date)
         elif choice == "4":
             sale_id = input("Enter sale ID to delete: ")
             delete_sale(sale_id)
