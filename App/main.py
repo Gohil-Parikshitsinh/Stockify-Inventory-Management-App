@@ -22,8 +22,8 @@ def display_menu(role):
 
     while True:
         print(f"\n{role} Menu:")
-        for index, option in enumerate(options, start=1):
-            print(f"{index}. {option}")
+        for idx, option in enumerate(options, start=1):
+            print(f"{idx}. {option}")
         print(f"{len(options) + 1}. Logout")
 
         try:
@@ -39,9 +39,9 @@ def handle_menu_selection(role, options):
         if 1 <= choice <= len(options):
             selected_option = options[choice - 1]
             call_feature_function(selected_option)
-        elif choice == len(options) + 1:  # Logout option
+        elif choice == len(options) + 1:
             print("Logging out...")
-            exit()  # Exit the program
+            exit()
         else:
             raise InvalidMenuChoiceError("Invalid choice. Please select a valid option.")
     except ValueError:
@@ -69,11 +69,9 @@ def main():
     print("Welcome to Inventory Management System")
 
     try:
-        # User login
         username = input("Enter username: ")
         password = input("Enter password: ")
 
-        # Authenticate user
         user = authenticate_user(username, password)
         if not user:
             raise AuthenticationError("Invalid username or password.")

@@ -4,7 +4,7 @@ from data import purchases, products, suppliers
 from invoices import generate_purchase_invoice, update_purchase_invoice, delete_purchase_invoice
 
 
-# Generate unique purchase ID starting with "PR"
+# purchase id generator
 def generate_purchase_id():
     while True:
         purchase_id = "PR" + ''.join(random.choices(string.ascii_letters + string.digits, k=6))
@@ -20,7 +20,6 @@ def add_purchase(product_id, quantity, supplier_id, date):
         print(f"Supplier ID '{supplier_id}' does not exist.")
         return
 
-    # Validate if the supplier sells the specified product
     if product_id not in suppliers[supplier_id]['products_supplied']:
         print(f"Supplier ID '{supplier_id}' does not sell Product ID '{product_id}'. Purchase cannot be made.")
         return
@@ -42,7 +41,6 @@ def add_purchase(product_id, quantity, supplier_id, date):
         "date": date
     }
 
-    # Update product stock
     products[product_id]["stock"] += quantity
 
     generate_purchase_invoice(purchase_id, supplier_id, product_id, quantity)
@@ -52,7 +50,6 @@ def add_purchase(product_id, quantity, supplier_id, date):
 
 
 def view_purchases():
-    """View all purchase records."""
     if not purchases:
         print("No purchases available.")
         return
@@ -65,22 +62,18 @@ def view_purchases():
 
 
 def update_purchase(purchase_id, new_quantity, new_product_id=None):
-    """Update an existing purchase's quantity and optionally the product."""
     if purchase_id not in purchases:
         print(f"Purchase ID '{purchase_id}' does not exist.")
         return
 
-    # Get the current purchase details
     current_purchase = purchases[purchase_id]
     supplier_id = current_purchase['supplier']
 
-    # If a new product ID is provided, validate if the supplier sells that product
     if new_product_id:
         if new_product_id not in products:
             print(f"Product ID '{new_product_id}' does not exist.")
             return
 
-        # Validate if the supplier sells the new product
         if new_product_id not in suppliers[supplier_id]['products_supplied']:
             print(f"Supplier ID '{supplier_id}' does not sell Product ID '{new_product_id}'. Update cannot be made.")
             return
@@ -97,17 +90,14 @@ def update_purchase(purchase_id, new_quantity, new_product_id=None):
     old_quantity = current_purchase['quantity']
     product_id = current_purchase['product_id']
 
-    # Update stock: Remove old quantity first, then add new quantity
     products[product_id]['stock'] -= old_quantity
     products[product_id]['stock'] += new_quantity
 
-    # If a new product is being assigned, update the product ID and adjust stock
     if new_product_id:
         products[new_product_id]['stock'] += new_quantity
         products[product_id]['stock'] -= new_quantity
         purchases[purchase_id]['product_id'] = new_product_id
 
-    # Update the purchase record with the new quantity
     purchases[purchase_id]['quantity'] = new_quantity
     update_purchase_invoice(purchase_id)
     print(
@@ -122,7 +112,6 @@ def delete_purchase(purchase_id):
     product_id = purchases[purchase_id]["product_id"]
     quantity = purchases[purchase_id]["quantity"]
 
-    # Reduce stock only if product still exists
     if product_id in products:
         products[product_id]["stock"] -= quantity
 
@@ -131,7 +120,6 @@ def delete_purchase(purchase_id):
     print(f"Purchase ID '{purchase_id}' deleted. Stock updated.")
 
 def purchase_menu():
-    """Display the purchase menu."""
     while True:
         print("\nPurchase Menu:")
         print("1. View Purchases")

@@ -2,16 +2,13 @@ import random
 import string
 from data import categories, products
 
-# products = {}  # Stores products as {product_id: {"name": name, "category_id": category_id, "price": price, "stock": stock}}
-
-# Generate a unique random product ID starting with 'P' and 7 random alphanumeric characters
+#product id generator
 def generate_product_id():
     while True:
         product_id = "P" + ''.join(random.choices(string.ascii_letters + string.digits, k=7))
         if product_id not in products:  # Ensure ID is unique
             return product_id
 
-# Add a new product
 def add_product(name, category_id, price, stock):
     if category_id not in categories:
         print(f"Category ID '{category_id}' does not exist. Please enter a valid category ID.")
@@ -25,7 +22,6 @@ def add_product(name, category_id, price, stock):
     }
     print(f"Product '{name}' added successfully with ID: {product_id}.")
 
-# View all products
 def view_products():
     if products:
         print("\nProducts:")
@@ -34,7 +30,6 @@ def view_products():
     else:
         print("No products available.")
 
-# Update a product
 def update_product(product_id, name=None, category_id=None, price=None, stock=None):
     if product_id in products:
         if category_id and category_id not in categories:
@@ -52,7 +47,6 @@ def update_product(product_id, name=None, category_id=None, price=None, stock=No
     else:
         print(f"Product ID '{product_id}' not found.")
 
-# Delete a product
 def delete_product(product_id):
     if product_id in products:
         del products[product_id]
@@ -60,7 +54,6 @@ def delete_product(product_id):
     else:
         print(f"Product ID '{product_id}' not found.")
 
-# Product menu
 def products_menu():
     while True:
         print("\nProducts Menu:")

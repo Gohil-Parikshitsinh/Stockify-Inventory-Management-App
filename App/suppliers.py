@@ -2,14 +2,13 @@ import random
 import string
 from data import products,suppliers, purchases, sales
 
-# Generate a unique random supplier ID starting with 'S' and 7 random alphanumeric characters
+# supplier id generator
 def generate_supplier_id():
     while True:
         supplier_id = "S" + ''.join(random.choices(string.ascii_letters + string.digits, k=7))
-        if supplier_id not in suppliers:  # Ensure ID is unique
+        if supplier_id not in suppliers:
             return supplier_id
 
-# Add a new supplier
 def add_supplier(name, products_supplied):
     if name in [supplier['name'] for supplier in suppliers.values()]:
         print(f"Supplier '{name}' already exists.")
@@ -24,7 +23,6 @@ def add_supplier(name, products_supplied):
     suppliers[supplier_id] = {"name": name, "products_supplied": products_supplied}
     print(f"Supplier '{name}' added successfully with ID: {supplier_id}.")
 
-# View all suppliers
 def view_suppliers():
     if suppliers:
         print("\nSuppliers:")
@@ -33,8 +31,7 @@ def view_suppliers():
     else:
         print("No suppliers available.")
 
-# Edit an existing supplier
-def edit_supplier(supplier_id, new_name, new_products_supplied):
+def update_supplier(supplier_id, new_name, new_products_supplied):
     if supplier_id not in suppliers:
         print(f"Supplier ID '{supplier_id}' does not exist.")
         return
@@ -52,7 +49,6 @@ def delete_supplier(supplier_id):
         print(f"Supplier ID '{supplier_id}' does not exist.")
         return
 
-    # Check if any purchases or sales are linked to the supplier's products
     supplier_products = suppliers[supplier_id]['products_supplied']
 
     linked_to_purchases = any(purchase['product_id'] in supplier_products for purchase in purchases.values())
@@ -64,8 +60,6 @@ def delete_supplier(supplier_id):
         del suppliers[supplier_id]
         print(f"Supplier ID '{supplier_id}' deleted successfully.")
 
-
-# Supplier menu
 def suppliers_menu():
     while True:
         print("\nSuppliers Menu:")
@@ -87,7 +81,7 @@ def suppliers_menu():
             supplier_id = input("Enter supplier ID to update: ")
             new_name = input("Enter new supplier name: ")
             new_products_supplied = input("Enter new product IDs supplied (comma-separated): ").split(',')
-            edit_supplier(supplier_id, new_name, [pid.strip() for pid in new_products_supplied])
+            update_supplier(supplier_id, new_name, [pid.strip() for pid in new_products_supplied])
         elif choice == "4":
             supplier_id = input("Enter supplier ID to delete: ")
             delete_supplier(supplier_id)

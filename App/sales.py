@@ -4,14 +4,13 @@ from data import sales, products
 from invoices import generate_sale_invoice, update_sale_invoice, delete_sale_invoice
 
 
-# Generate a unique random sale ID starting with 'S' and 7 random alphanumeric characters
+# sales id generator
 def generate_sale_id():
     while True:
         sale_id = "SA" + ''.join(random.choices(string.ascii_letters + string.digits, k=6))
         if sale_id not in sales:  # Ensure ID is unique
             return sale_id
 
-# Add a new sale
 def add_sale(product_id, quantity, customer, date):
     if product_id not in products:
         print(f"Product ID '{product_id}' does not exist. Cannot add sale.")
@@ -33,14 +32,12 @@ def add_sale(product_id, quantity, customer, date):
     sale_id = generate_sale_id()
     sales[sale_id] = {"product_id": product_id, "quantity": quantity, "customer": customer, "date": date}
 
-    # Deduct stock
     products[product_id]["stock"] -= quantity
 
     generate_sale_invoice(sale_id, product_id, quantity, customer, date)
 
     print(f"Sale added successfully with ID: {sale_id}. Stock updated.")
 
-# View all sales
 def view_sales():
     if sales:
         print("\nSales:")
@@ -50,7 +47,6 @@ def view_sales():
     else:
         print("No sales available.")
 
-# Edit an existing sale
 def update_sale(sale_id, new_product_id, new_quantity, customer, date):
     if sale_id not in sales:
         print(f"Sale ID '{sale_id}' does not exist.")
@@ -72,23 +68,20 @@ def update_sale(sale_id, new_product_id, new_quantity, customer, date):
     old_product_id = sales[sale_id]['product_id']
     old_quantity = sales[sale_id]['quantity']
 
-    # Adjust stock before updating the sale
-    products[old_product_id]['stock'] += old_quantity  # Restore old stock
+    products[old_product_id]['stock'] += old_quantity
     if products[new_product_id]['stock'] < new_quantity:
         print(f"Insufficient stock for Product ID '{new_product_id}'. Available stock: {products[new_product_id]['stock']}")
-        products[old_product_id]['stock'] -= old_quantity  # Revert stock change
+        products[old_product_id]['stock'] -= old_quantity
         return
 
-    products[new_product_id]['stock'] -= new_quantity  # Deduct new stock
+    products[new_product_id]['stock'] -= new_quantity
 
-    # Update sale record
     sales[sale_id] = {"product_id": new_product_id, "quantity": new_quantity, "customer": customer, "date": date}
 
     update_sale_invoice(sale_id)
 
     print(f"Sale ID '{sale_id}' updated successfully. Stock updated.")
 
-# Delete a sale
 def delete_sale(sale_id):
     if sale_id not in sales:
         print(f"Sale ID '{sale_id}' does not exist.")
@@ -97,7 +90,6 @@ def delete_sale(sale_id):
     product_id = sales[sale_id]["product_id"]
     quantity = sales[sale_id]["quantity"]
 
-    # Restore stock
     if product_id in products:
         products[product_id]["stock"] += quantity
 
@@ -105,7 +97,6 @@ def delete_sale(sale_id):
     delete_sale_invoice(sale_id)
     print(f"Sale ID '{sale_id}' deleted successfully. Stock restored.")
 
-# Sales menu
 def sales_menu():
     while True:
         print("\nSales Menu:")

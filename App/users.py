@@ -7,8 +7,6 @@ class User:
     def __str__(self):
         return f"User: {self.username}, Role: {self.role}"
 
-
-# Sample users (for now, hardcoded for testing purposes)
 users = [
     User("admin", "admin123", "Admin"),
     User("manager", "manager123", "Manager"),

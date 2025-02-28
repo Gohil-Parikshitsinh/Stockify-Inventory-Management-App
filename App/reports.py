@@ -28,12 +28,12 @@ def reports_menu():
             break
         else:
             print("Invalid choice. Please try again.")
+
 # Sales Trend over Time - Line Chart
 def plot_sales_trend():
     dates = [details['date'] for details in sales.values()]
     quantities = [details['quantity'] for details in sales.values()]
 
-    # Sorting by date
     unique_dates = sorted(set(dates))
     sales_by_date = {date: sum(details['quantity'] for details in sales.values() if details['date'] == date) for date in unique_dates}
 
@@ -51,7 +51,6 @@ def plot_purchases_trend():
     dates = [details['date'] for details in purchases.values()]
     quantities = [details['quantity'] for details in purchases.values()]
 
-    # Sorting by date
     unique_dates = sorted(set(dates))
     purchases_by_date = {date: sum(details['quantity'] for details in purchases.values() if details['date'] == date) for date in unique_dates}
 
