@@ -3,7 +3,6 @@ import string
 from data import sales, products
 from invoices import generate_sale_invoice, update_sale_invoice, delete_sale_invoice
 
-
 # sales id generator
 def generate_sale_id():
     while True:
